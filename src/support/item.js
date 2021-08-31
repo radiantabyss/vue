@@ -1,4 +1,8 @@
 window.Item = {
+    setKey(item, key, value) {
+        return window.Item.setKeys(item, key, value);
+    },
+
     setKeys(item, keys, values) {
         let not_empty = window.handleEmpty(item);
         if ( not_empty !== true ) {
@@ -17,6 +21,6 @@ window.Item = {
             item[keys[i]] = values[i];
         }
 
-        return item;
+        return {...item};
     },
 };
