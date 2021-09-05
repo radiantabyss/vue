@@ -1,55 +1,63 @@
 //electron only
-
 import fs from 'fs-extra';
 import { v4 as uuid } from 'uuid';
 
-window.LocalDB = {
+let LocalDB = {
+    init(tables) {
+        fs.ensureDir('database');
+
+        for ( let table of tables ) {
+            if ( !fs.existsSync(`database/${table}.json`) ) {
+                fs.writeFileSync(`database/${table}.json`, '[]');
+            }
+        }
+    },
+
+    read(table) {
+        return JSON.parse(fs.readFileSync(`database/${table}.json`, 'utf8'));
+    },
+
+    write(table, data) {
+        fs.writeFileSync(`database/${table}.json`, JSON.stringify(data));
+    },
+
     create(table, data) {
-        let items;
         data.id = uuid();
 
         //remove unwanted fields
         delete data._event;
 
-        try {
-            items = JSON.parse(fs.readFileSync(`${DB_PATH}/${table}.json`, 'utf8'));
-        } catch(e) {
-            items = [];
-        }
-
+        let items = LocalDB.read(table);
         items.push(data);
-        fs.writeFileSync(`${DB_PATH}/${table}.json`, JSON.stringify(items));
+        LocalDB.write(table, items);
 
         return data;
     },
 
     update(table, id, data) {
-        let items;
         data.id = id;
 
         //remove unwanted fields
         delete data._event;
 
-        try {
-            items = JSON.parse(fs.readFileSync(`${DB_PATH}/${table}.json`, 'utf8'));
-        } catch(e) {
-            items = [];
+        let items = LocalDB.read(table);
+        let new_items = [];
+        for ( let i = 0; i < items.length; i++ ) {
+            if ( items[i].id == data.id ) {
+                new_items[i] = data;
+            }
+            else {
+                new_items[i] = items[i];
+            }
         }
 
-        items = Items.replace(items, data);
-        fs.writeFileSync(`${DB_PATH}/${table}.json`, JSON.stringify(items));
+        LocalDB.write(table, new_items);
 
         return data;
     },
 
     find(table, id) {
-        let items;
-        try {
-            items = JSON.parse(fs.readFileSync(`${DB_PATH}/${table}.json`, 'utf8'));
-        } catch(e) {
-            items = [];
-        }
-
+        let items = LocalDB.read(table);
         for ( let item of items ) {
             if ( item.id == id ) {
                 return item;
@@ -60,13 +68,7 @@ window.LocalDB = {
     },
 
     findBy(table, key, value) {
-        let items;
-        try {
-            items = JSON.parse(fs.readFileSync(`${DB_PATH}/${table}.json`, 'utf8'));
-        } catch(e) {
-            items = [];
-        }
-
+        let items = LocalDB.read(table);
         for ( let item of items ) {
             if ( item[key] == value ) {
                 return item;
@@ -77,51 +79,68 @@ window.LocalDB = {
     },
 
     get(table, page = 1, per_page = 25, filters = {}) {
-        let items;
-        try {
-            items = JSON.parse(fs.readFileSync(`${DB_PATH}/${table}.json`, 'utf8'));
-        } catch(e) {
-            items = [];
+        let items = LocalDB.read(table);
+
+        //filter items
+        let filtered = [];
+        if ( Object.keys(filters).length ) {
+            for ( let key in filters ) {
+                for ( let item of items ) {
+                    if ( item[key] != filters[key] ) {
+                        continue;
+                    }
+
+                    filtered.push(item);
+                }
+            }
+        }
+        else {
+            filtered = items;
         }
 
         let returned = [];
         let start = (page - 1) * per_page;
         let end = page * per_page;
-        if ( end > items.length ) {
-            end = items.length;
+        if ( end > filtered.length ) {
+            end = filtered.length;
         }
 
         for ( let i = start; i < end; i++ ) {
-            returned.push(items[i]);
+            returned.push(filtered[i]);
         }
 
         return returned;
     },
 
     delete(table, id) {
-        let items;
-        try {
-            items = JSON.parse(fs.readFileSync(`${DB_PATH}/${table}.json`, 'utf8'));
-        } catch(e) {
-            items = [];
+        let items = LocalDB.read(table);
+        items = Items.delete(items, id);
+
+        let new_items = [];
+        for ( let i = 0; i < items.length; i++ ) {
+            if ( items[i].id == id ) {
+                continue;
+            }
+
+            new_items.push(items[i]);
         }
 
-        items = Items.delete(items, id);
-        fs.writeFileSync(`${DB_PATH}/${table}.json`, JSON.stringify(items));
+        LocalDB.write(table, new_items);
     },
 
     sort(table, from, to) {
-        let items;
-        try {
-            items = JSON.parse(fs.readFileSync(`${DB_PATH}/${table}.json`, 'utf8'));
-        } catch(e) {
-            items = [];
-        }
+        let items = LocalDB.read(table);
 
         let temp = items[from];
         items[from] = items[to];
         items[to] = temp;
 
-        fs.writeFileSync(`${DB_PATH}/${table}.json`, JSON.stringify(items));
-    }
+        LocalDB.write(table, items);
+    },
 }
+
+if ( typeof window !== 'undefined' ) {
+    window.LocalDB = LocalDB;
+}
+
+export default LocalDB;

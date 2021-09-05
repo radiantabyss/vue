@@ -1,7 +1,7 @@
 const RoutesLoader = {
     load() {
         let routes = [];
-        let context = require.context('@/http/routes/', true, /\.js$/);
+        let context = require.context('@/routes/', true, /\.js$/);
 
         context.keys().forEach((key) => {
             let groups = context(key).default;

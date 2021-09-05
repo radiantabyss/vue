@@ -1,5 +1,3 @@
-
-
 window.Items = {
     pluck(items, key = 'id') {
         let plucked = [];
