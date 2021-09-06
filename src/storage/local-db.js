@@ -1,4 +1,4 @@
-//electron only
+//ONLY FOR ELECTRON
 import fs from 'fs-extra';
 import { v4 as uuid } from 'uuid';
 
