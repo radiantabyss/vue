@@ -2,23 +2,25 @@
 import fs from 'fs-extra';
 import { v4 as uuid } from 'uuid';
 
+let path = `${global.APP_PATH}/../database`;
+
 let LocalDB = {
     init(tables) {
-        fs.ensureDir('database');
+        fs.ensureDir(path);
 
         for ( let table of tables ) {
-            if ( !fs.existsSync(`database/${table}.json`) ) {
-                fs.writeFileSync(`database/${table}.json`, '[]');
+            if ( !fs.existsSync(`${path}/${table}.json`) ) {
+                fs.writeFileSync(`${path}/${table}.json`, '[]');
             }
         }
     },
 
     read(table) {
-        return JSON.parse(fs.readFileSync(`database/${table}.json`, 'utf8'));
+        return JSON.parse(fs.readFileSync(`${path}/${table}.json`, 'utf8'));
     },
 
     write(table, data) {
-        fs.writeFileSync(`database/${table}.json`, JSON.stringify(data));
+        fs.writeFileSync(`${path}/${table}.json`, JSON.stringify(data));
     },
 
     create(table, data) {

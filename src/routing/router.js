@@ -17,13 +17,13 @@ routes.push({
 });
 
 //init dispatcher
-const Dispatcher = new VueRouter({
+const Router = new VueRouter({
     mode: 'history',
     routes: routes,
 });
 
 //run middleware
-Dispatcher.beforeEach((to, from, next) => {
+Router.beforeEach((to, from, next) => {
     Middleware.run(to, from)
     .then(() => {
         next();
@@ -38,4 +38,4 @@ Dispatcher.beforeEach((to, from, next) => {
     });
 });
 
-export default Dispatcher;
+export default Router;
