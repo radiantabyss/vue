@@ -150,7 +150,7 @@ let request = function(method, edge, payload = {}, display_errors = true, base_u
     });
 }
 
-window.Request = {
+const Request = {
     get(edge, payload = {}, display_errors = true, base_url = '', auth_token = '') {
         return request('GET', edge, payload, display_errors, base_url, auth_token);
     },
@@ -158,4 +158,6 @@ window.Request = {
     post(edge, payload = {}, display_errors = true, base_url = '', auth_token = '') {
         return request('POST', edge, payload, display_errors, base_url, auth_token);
     },
-}
+};
+
+export default Request;

@@ -1,4 +1,4 @@
-window.StorageHandler = {
+const StorageHandler = {
     driver: 'localStorage',
     fallback: true,
     keys: {},
@@ -84,6 +84,6 @@ window.StorageHandler = {
             return window.StorageHandler.keys[Object.keys(window.StorageHandler.keys)[index]];
         }
     }
-}
+};
 
-window.StorageHandler.init();
+export default StorageHandler;

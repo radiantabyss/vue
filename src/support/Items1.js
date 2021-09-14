@@ -1,4 +1,4 @@
-window.Items = {
+const Items = {
     pluck(items, key = 'id') {
         let plucked = [];
         for (let i = 0; i < items.length; i++) {
@@ -257,3 +257,5 @@ window.Items = {
         return items;
     },
 };
+
+export default Items;

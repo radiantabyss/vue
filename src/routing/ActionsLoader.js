@@ -2,7 +2,7 @@ const ActionsLoader = {
     load() {
         let actions = {};
         let context = require.context('@/http/actions/', true, /\.vue/);
-        
+
         context.keys().forEach((key) => {
             let split = key.split('/');
             let namespace = split[split.length - 2];
@@ -27,6 +27,6 @@ const ActionsLoader = {
 
         return actions;
     },
-}
+};
 
 export default ActionsLoader;

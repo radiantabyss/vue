@@ -1,4 +1,4 @@
-window.Cookie = {
+const Cookie = {
     get(key) {
         key = key + "=";
         var ca = document.cookie.split(';');
@@ -23,4 +23,6 @@ window.Cookie = {
     delete(key) {
         window.Cookie.set(key, null, -1);
     },
-}
+};
+
+export default Cookie;

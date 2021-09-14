@@ -1,20 +1,12 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import RoutesLoader from './routes-loader';
-import Middleware from './middleware';
-import NotFoundAction from '@/http/actions/static/NotFoundAction.vue';
+import RoutesLoader from './RoutesLoader';
+import Middleware from './Middleware';
 
 Vue.use(VueRouter);
 
 //load routes
 let routes = RoutesLoader.load();
-
-//add not found route
-routes.push({
-    name: 'NotFound',
-    component: NotFoundAction,
-    path: '*'
-});
 
 //init dispatcher
 const Router = new VueRouter({

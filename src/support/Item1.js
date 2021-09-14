@@ -1,4 +1,4 @@
-window.Item = {
+const Item = {
     setKey(item, key, value) {
         return window.Item.setKeys(item, key, value);
     },
@@ -24,3 +24,5 @@ window.Item = {
         return {...item};
     },
 };
+
+export default Item;
