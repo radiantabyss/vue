@@ -1,14 +1,14 @@
-const Helpers {
+const Helpers = {
     dmp(text) {
         // eslint-disable-next-line
         console.log(text);
-    }
+    },
 
     ucwords(str) {
         return str.replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
             return s.toUpperCase();
         });
-    }
+    },
 
     handleEmpty(items) {
         if ( items === false ) {
@@ -28,7 +28,7 @@ const Helpers {
         }
 
         return true;
-    }
+    },
 }
 
 export default Helpers;
