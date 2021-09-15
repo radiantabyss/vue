@@ -6,7 +6,9 @@ const ActionsLoader = {
         context.keys().forEach((key) => {
             let split = key.split('/');
             let namespace = split[split.length - 2];
-            let namespace_uc = window.ucwords(namespace);
+            let namespace_uc = namespace.replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
+                return s.toUpperCase();
+            });
             let name = split[split.length - 1].replace('.vue', '');
 
             if ( !name.match(/Action/) ) {
