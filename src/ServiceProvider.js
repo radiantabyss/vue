@@ -13,7 +13,7 @@ const ServiceProvider = {
     register() {
         //register helpers
         for ( let helper in Helpers ) {
-            window[helper] = Helpers[key];
+            window[helper] = Helpers[helper];
         }
 
         window.Item = Item;
