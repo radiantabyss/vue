@@ -6,8 +6,7 @@ const Validator = {
         let formatted_messages = {};
         for ( let key in messages ) {
             let split = key.split('.');
-            let pop = split.pop();
-            formatted_messages[`${split[split.length - 1]}.${pop.join('.')}`] = messages[key];
+            formatted_messages[`${split[split.length - 1]}.${split.pop().join('.')}`] = messages[key];
         }
 
         let validator = new ValidatorJS(data, rules, formatted_messages);

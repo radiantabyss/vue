@@ -30,12 +30,19 @@ const Helpers = {
         return true;
     },
 
-    moveElement(array, from, to) {
-        const copy = [...array];
-        const valueToMove = copy.splice(from, 1)[0];
-        copy.splice(to, 0, valueToMove);
+    /*helpers from https://github.com/validatorjs/validator.js*/
+    ltrim(str, chars) {
+        const pattern = chars ? new RegExp(`^[${chars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]+`, 'g') : /^\s+/g;
+        return str.replace(pattern, '');
+    },
 
-        return copy;
+    rtrim(str, chars) {
+        const pattern = chars ? new RegExp(`[${chars.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]+$`, 'g') : /(\s)+$/g;
+        return str.replace(pattern, '');
+    },
+
+    trim(str, chars) {
+        return Helpers.rtrim(Helpers.ltrim(str, chars), chars);
     },
 }
 
