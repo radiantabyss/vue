@@ -10,7 +10,7 @@ let routes = RoutesLoader.load();
 
 //init dispatcher
 const Router = new VueRouter({
-    mode: 'history',
+    mode: process && process.versions && process.versions.electron ? 'hash' : 'history',
     routes: routes,
 });
 
