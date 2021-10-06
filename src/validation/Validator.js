@@ -6,7 +6,9 @@ const Validator = {
         let formatted_messages = {};
         for ( let key in messages ) {
             let split = key.split('.');
-            formatted_messages[`${split[split.length - 1]}.${split.pop().join('.')}`] = messages[key];
+            let pop = Array.from(split);
+            pop.pop();
+            formatted_messages[`${split[split.length - 1]}.${pop.join('.')}`] = messages[key];
         }
 
         let validator = new ValidatorJS(data, rules, formatted_messages);
@@ -16,7 +18,7 @@ const Validator = {
                 return validator.passes();
             },
             messages() {
-                return validator.errors.all();
+                return Object.values(validator.errors.all());
             },
         };
     }
