@@ -114,6 +114,17 @@ const Items = {
         }
     },
 
+    patch(items, data) {
+        if ( !data.id ) {
+            throw 'ID is required.';
+        }
+
+        let id = data.id;
+        delete data.id;
+
+        return Items.setKeys(items, id, Object.keys(data), Object.values(data));
+    },
+
     replace(items, item) {
         let not_empty = window.handleEmpty(items);
         if ( not_empty !== true ) {
@@ -182,7 +193,7 @@ const Items = {
     },
 
     setKey(items, id, key, value) {
-        return window.Items.setKeys(items, id, key, value);
+        return Items.setKeys(items, id, key, value);
     },
 
     setKeys(items, ids, keys, values) {
@@ -222,7 +233,7 @@ const Items = {
     },
 
     toggleKey(items, id, key) {
-        return window.Items.toggleKeys(items, id, key);
+        return Items.toggleKeys(items, id, key);
     },
 
     toggleKeys(items, ids, keys) {

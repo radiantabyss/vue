@@ -1,6 +1,10 @@
 const Item = {
+	patch(item, data) {
+		return Item.setKeys(item, Object.keys(data), Object.values(data));
+	},
+	
     setKey(item, key, value) {
-        return window.Item.setKeys(item, key, value);
+        return Item.setKeys(item, key, value);
     },
 
     setKeys(item, keys, values) {
