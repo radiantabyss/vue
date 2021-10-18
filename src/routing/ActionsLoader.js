@@ -5,30 +5,39 @@ const ActionsLoader = {
 
         context.keys().forEach((key) => {
             let split = key.split('/');
-            let namespace = split[split.length - 2];
-            let namespace_uc = namespace.replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
-                return s.toUpperCase();
-            }).replace(/ /g, '');
+            split.shift();
             let name = split[split.length - 1].replace('.vue', '');
+            split.pop();
 
-            if ( !name.match(/Action/) ) {
+            if ( !name.match(/Action$/) ) {
                 return;
             }
 
-            if ( namespace != '.' ) {
-                if ( !actions[namespace_uc] ) {
-                    actions[namespace_uc] = {};
-                }
-
-                actions[namespace_uc][name] = context(key).default;
-            }
-            else {
-                actions[name] = context(key).default;
-            }
+            ActionsLoader.setNamespace(actions, name, split, context(key).default);
         });
 
         return actions;
     },
+
+    //private
+    setNamespace(actions, name, namespace, context) {
+        if ( !namespace.length ) {
+            actions[name] = context;
+            return;
+        }
+
+        let first = namespace[0].replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
+            return s.toUpperCase();
+        }).replace(/ /g, '');
+
+        namespace.shift();
+
+        if ( !actions[first] ) {
+            actions[first] = {};
+        }
+
+        ActionsLoader.setNamespace(actions[first], name, namespace, context);
+    }
 };
 
 export default ActionsLoader;
