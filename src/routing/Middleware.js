@@ -1,18 +1,25 @@
-const Middleware = {};
-let context = require.context('@/http/middleware/', true, /\.js$/);
-context.keys().forEach((key) => {
-    let split = key.split('/');
-    let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
-    Middleware[name] = context(key).default;
-});
+import Loader from '@/loader';
 
-function recursion(i, to, from, resolve, reject) {
+let Middleware = {};
+let contexts = Loader.middleware();
+
+for ( let i = 0; i < contexts.length; i++ ) {
+    let files = contexts[i].keys();
+
+    for ( let j = 0; j < files.length; j++ ) {
+        let split = files[j].split('/');
+        let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
+        Middleware[name] = contexts[i](files[j]).default;
+    }
+}
+
+function runMiddleware(to, from, resolve, reject, i = 0) {
     //reached end, then everything passed
     if ( i == to.meta.middleware.length ) {
         return resolve();
     }
 
-    //middleare doesnt exist
+    //middleware doesnt exist
     if ( !Middleware[to.meta.middleware[i]] ) {
         throw new Error(`${to.meta.middleware[i]} Middleware not found.`);
     }
@@ -21,7 +28,7 @@ function recursion(i, to, from, resolve, reject) {
     Middleware[to.meta.middleware[i]](to, from)
     .then(() => {
         //resolved, go next
-        recursion(i + 1, to, from, resolve, reject);
+        runMiddleware(to, from, resolve, reject, i + 1);
     })
     .catch((redirect = '/') => {
         reject(redirect);
@@ -35,7 +42,7 @@ export default {
                 return resolve();
             }
 
-            recursion(0, to, from, resolve, reject);
+            runMiddleware(to, from, resolve, reject);
         });
     }
 }

@@ -269,7 +269,7 @@ const Items = {
     },
 
     sort(items, from, to) {
-        const copy = [...array];
+        const copy = [...items];
         const valueToMove = copy.splice(from, 1)[0];
         copy.splice(to, 0, valueToMove);
 

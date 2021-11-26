@@ -1,17 +1,42 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import RoutesLoader from './RoutesLoader';
-import Middleware from './Middleware';
+import Loader from '@/loader';
+import Middleware from '@lumi/routing/Middleware';
 
 Vue.use(VueRouter);
 
 //load routes
-let routes = RoutesLoader.load();
+let Routes = [];
+let contexts = Loader.routes();
+
+for ( let i = 0; i < contexts.length; i++ ) {
+    let files = contexts[i].keys();
+
+    for ( let j = 0; j < files.length; j++ ) {
+        let groups = contexts[i](files[j]).default;
+
+        for ( let k = 0; k < groups.length; k++ ) {
+            let middleware = groups[k].middleware;
+
+            for ( let l = 0; l < groups[k].routes.length; l++ ) {
+                let route = groups[k].routes[l];
+
+                Routes.push({
+                    package: route.package ? route.package : '',
+                    name: route.name ? route.name : route.action.name,
+                    component: route.action,
+                    path: route.path.replace(/\{([\s\S]+?)\}/g, ':$1'),
+                    meta: {...route.meta, middleware}
+                });
+            }
+        }
+    }
+}
 
 //init dispatcher
 const Router = new VueRouter({
     mode: process && process.versions && process.versions.electron ? 'hash' : 'history',
-    routes: routes,
+    routes: Routes,
 });
 
 //run middleware
