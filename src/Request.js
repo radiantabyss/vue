@@ -26,7 +26,7 @@ axios.interceptors.request.use((request) => {
     return request;
 });
 
-let request = function(method, edge, payload = {}, display_errors = true, base_url = '', auth_token = '') {
+let request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null) {
     return new Promise((resolve, reject) => {
         //set default base url
         if ( !base_url ) {
@@ -35,7 +35,7 @@ let request = function(method, edge, payload = {}, display_errors = true, base_u
 
         //set default auth token
         if ( !auth_token ) {
-            auth_token = StorageHandler.getItem('lead_token');
+            auth_token = StorageHandler.getItem('jwt_token');
         }
 
         //clear previous messages
@@ -75,11 +75,15 @@ let request = function(method, edge, payload = {}, display_errors = true, base_u
 
         //set auth token
         if ( auth_token ) {
-            if ( url.match(/\?/) ) {
-                url += '&token=' + auth_token;
+            if ( typeof auth_token !== 'object' ) {
+                auth_token = {
+                    jwt_token: auth_token,
+                };
             }
-            else {
-                url += '?token=' + auth_token;
+
+            for ( let key in auth_token ) {
+                url += url.match(/\?/) ? '&' : '?';
+                url += `${key}=${auth_token[key]}`;
             }
         }
 
@@ -151,11 +155,11 @@ let request = function(method, edge, payload = {}, display_errors = true, base_u
 }
 
 const Request = {
-    get(edge, payload = {}, display_errors = true, base_url = '', auth_token = '') {
+    get(edge, payload = {}, display_errors = true, base_url = null, auth_token = null) {
         return request('GET', edge, payload, display_errors, base_url, auth_token);
     },
 
-    post(edge, payload = {}, display_errors = true, base_url = '', auth_token = '') {
+    post(edge, payload = {}, display_errors = true, base_url = null, auth_token = null) {
         return request('POST', edge, payload, display_errors, base_url, auth_token);
     },
 };

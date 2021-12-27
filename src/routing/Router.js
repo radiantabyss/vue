@@ -21,12 +21,27 @@ for ( let i = 0; i < contexts.length; i++ ) {
             for ( let l = 0; l < groups[k].routes.length; l++ ) {
                 let route = groups[k].routes[l];
 
+                if ( !route.action ) {
+                    throw `Action missing for ${route.path}`;
+                }
+
+                let namespace = '';
+                let action_path = route.action.__file.replace('src/http/actions/', '').split('/');
+                for ( let i = 0; i < action_path.length - 1; i++ ) {
+                    namespace += action_path[i].replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
+                        return s.toUpperCase();
+                    }).replace(/ /g, '')+'\\';
+                }
+
                 Routes.push({
                     package: route.package ? route.package : '',
-                    name: route.name ? route.name : route.action.name,
+                    name: namespace + (route.name ? route.name : route.action.name),
                     component: route.action,
                     path: route.path.replace(/\{([\s\S]+?)\}/g, ':$1'),
-                    meta: {...route.meta, middleware}
+                    meta: {
+                        middleware,
+                        settings: route.action.settings ? route.action.settings : {},
+                    },
                 });
             }
         }
