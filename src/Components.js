@@ -4,7 +4,7 @@ import Helpers from '@lumi/support/Helpers';
 
 let contexts = Loader.components();
 
-for ( let i = 0; i < contexts.length; i++ ) {
+for ( let i in contexts ) {
     let files = contexts[i].keys();
 
     for ( let j = 0; j < files.length; j++ ) {
@@ -15,6 +15,11 @@ for ( let i = 0; i < contexts.length; i++ ) {
             .toLowerCase();
 
         name = Helpers.trim(name, '-');
+
+        if ( i != '' ) {
+            let package_name = Helpers.trim(i.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase(), '-');
+            name = `${package_name}-${name}`;
+        }
 
         Vue.component(name, contexts[i](files[j]).default);
     }

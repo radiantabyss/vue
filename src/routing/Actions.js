@@ -3,7 +3,7 @@ import Loader from '@/loader';
 let Actions = {};
 let contexts = Loader.actions();
 
-for ( let i = 0; i < contexts.length; i++ ) {
+for ( let i in contexts ) {
     let files = contexts[i].keys();
 
     for ( let j = 0; j < files.length; j++ ) {
@@ -11,6 +11,12 @@ for ( let i = 0; i < contexts.length; i++ ) {
         split.shift();
         let name = split[split.length - 1].replace('.vue', '');
         split.pop();
+
+        //check namespace
+        if ( i != '' ) {
+            split.unshift(i);
+            split.unshift('Package');
+        }
 
         if ( !name.match(/Action$/) ) {
             continue;

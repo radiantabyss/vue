@@ -3,12 +3,18 @@ import Loader from '@/loader';
 let Middleware = {};
 let contexts = Loader.middleware();
 
-for ( let i = 0; i < contexts.length; i++ ) {
+for ( let i in contexts ) {
     let files = contexts[i].keys();
 
     for ( let j = 0; j < files.length; j++ ) {
         let split = files[j].split('/');
         let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
+
+        //set package namespace
+        if ( i != '' ) {
+            name = `${i}::${name}`;
+        }
+
         Middleware[name] = contexts[i](files[j]).default;
     }
 }
