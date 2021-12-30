@@ -45,8 +45,6 @@ function setNamespace(Modules, name, namespace, context) {
     setNamespace(Modules[first], name, namespace, context);
 }
 
-console.log(Modules);
-
 const Store = new Vuex.Store({
     modules: Modules,
 });
