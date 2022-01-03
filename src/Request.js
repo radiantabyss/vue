@@ -82,6 +82,10 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             }
 
             for ( let key in auth_token ) {
+                if ( auth_token[key] == '' || auth_token[key] === null ) {
+                    continue;
+                }
+
                 url += url.match(/\?/) ? '&' : '?';
                 url += `${key}=${auth_token[key]}`;
             }
@@ -155,11 +159,11 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
 }
 
 const Request = {
-    get(edge, payload = {}, display_errors = true, base_url = null, auth_token = null) {
+    get(edge, payload = {}, display_errors = false, base_url = null, auth_token = null) {
         return request('GET', edge, payload, display_errors, base_url, auth_token);
     },
 
-    post(edge, payload = {}, display_errors = true, base_url = null, auth_token = null) {
+    post(edge, payload = {}, display_errors = false, base_url = null, auth_token = null) {
         return request('POST', edge, payload, display_errors, base_url, auth_token);
     },
 };

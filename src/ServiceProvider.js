@@ -8,7 +8,6 @@ import StorageHandler from './storage/StorageHandler';
 import Alert from './Alert';
 import Request from './Request';
 
-
 const ServiceProvider = {
     register() {
         //register helpers
