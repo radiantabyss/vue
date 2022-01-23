@@ -49,14 +49,23 @@ const Items = {
         let count = Array.isArray(items) ? items.length : Object.keys(items).length;
         for ( let i = 0; i < count; i++ ) {
             let index = Array.isArray(items) ? i : Object.keys(items)[i];
+
             if ( ids.includes(items[index].id) ) {
-                new_items[index] = items[index];
+                if ( Array.isArray(items) ) {
+                    new_items.push(items[index]);
+                }
+                else {
+                    new_items[index] = items[index];
+                }
             }
         }
 
         if ( single ) {
-            if ( new_items.length ) {
+            if ( Array.isArray(new_items) && new_items.length ) {
                 return new_items[0];
+            }
+            else if ( !Array.isArray(new_items) && Object.keys(new_items).length ) {
+                return new_items[Object.keys(new_items)[0]];
             }
 
             return false;

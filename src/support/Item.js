@@ -27,6 +27,20 @@ const Item = {
 
         return {...item};
     },
+	
+	removeEmptyKeys(item) {
+		let new_item = Array.isArray(item) ? [] : {};
+        let count = Array.isArray(item) ? item.length : Object.keys(item).length;
+		for ( let i = 0; i < count; i++ ) {
+            let index = Array.isArray(item) ? i : Object.keys(item)[i];
+
+            if ( item[index] !== '' ) {
+                new_item[index] = item[index];
+            }
+        }
+
+        return new_item;
+	}
 };
 
 export default Item;

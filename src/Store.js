@@ -39,10 +39,13 @@ function setNamespace(Modules, name, namespace, context) {
     namespace.shift();
 
     if ( !Modules[first] ) {
-        Modules[first] = {};
+        Modules[first] = {
+            namespaced: true,
+            modules: {},
+        };
     }
 
-    setNamespace(Modules[first], name, namespace, context);
+    setNamespace(Modules[first].modules, name, namespace, context);
 }
 
 const Store = new Vuex.Store({
