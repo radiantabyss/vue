@@ -20,13 +20,19 @@ const formatErrors = function(response) {
 }
 
 axios.interceptors.request.use((request) => {
-    if (request.data && request.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
-        request.data = qs.stringify(request.data);
+    if (request.data ) {
+        if ( request.headers['Content-Type'] === 'application/x-www-form-urlencoded' ) {
+            request.data = qs.stringify(request.data);
+        }
+        else if ( request.headers['Content-Type'] === 'application/json' ) {
+            request.data = JSON.stringify(request.data);
+            request.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        }
     }
     return request;
 });
 
-let request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null) {
+let request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}) {
     return new Promise((resolve, reject) => {
         //set default base url
         if ( !base_url ) {
@@ -57,9 +63,11 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             delete payload._event;
         }
 
-        let headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        };
+        if ( !Object.keys(headers).length ) {
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            };
+        }
 
         let data = {};
 
@@ -159,12 +167,12 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
 }
 
 const Request = {
-    get(edge, payload = {}, display_errors = false, base_url = null, auth_token = null) {
-        return request('GET', edge, payload, display_errors, base_url, auth_token);
+    get(edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}) {
+        return request('GET', edge, payload, display_errors, base_url, auth_token, headers);
     },
 
-    post(edge, payload = {}, display_errors = false, base_url = null, auth_token = null) {
-        return request('POST', edge, payload, display_errors, base_url, auth_token);
+    post(edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}) {
+        return request('POST', edge, payload, display_errors, base_url, auth_token, headers);
     },
 };
 
