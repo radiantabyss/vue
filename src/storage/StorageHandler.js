@@ -4,7 +4,7 @@ const StorageHandler = {
     keys: {},
 
     init() {
-        if ( !window.StorageHandler.fallback ) {
+        if ( !StorageHandler.fallback ) {
             return;
         }
 
@@ -13,7 +13,7 @@ const StorageHandler = {
         }
 
         for ( let key in window.memoryStorage ) {
-            window.StorageHandler.keys[key] = window.memoryStorage[key];
+            StorageHandler.keys[key] = window.memoryStorage[key];
         }
 
         delete window.memoryStorage;
@@ -22,66 +22,67 @@ const StorageHandler = {
     driverIsSupported() {
         let test_key = '__test_key';
         try {
-            window[window.StorageHandler.driver].setItem(test_key, test_key);
-            window[window.StorageHandler.driver].removeItem(test_key);
+            window[StorageHandler.driver].setItem(test_key, test_key);
+            window[StorageHandler.driver].removeItem(test_key);
             return true;
-        } catch(e) {
+        }
+        catch(e) {
             return false;
         }
     },
 
     setItem(key, value) {
-        if ( window.StorageHandler.driverIsSupported() ) {
-            window[window.StorageHandler.driver].setItem(key, value);
+        if ( StorageHandler.driverIsSupported() ) {
+            window[StorageHandler.driver].setItem(key, value);
         }
 
-        if ( window.StorageHandler.fallback ) {
-            window.StorageHandler.keys[key] = value;
+        if ( StorageHandler.fallback ) {
+            StorageHandler.keys[key] = value;
         }
     },
 
     getItem(key) {
         let value;
 
-        if ( window.StorageHandler.driverIsSupported() ) {
-            value = window[window.StorageHandler.driver].getItem(key);
+        if ( StorageHandler.driverIsSupported() ) {
+            value = window[StorageHandler.driver].getItem(key);
         }
 
         if ( (typeof value === 'undefined' || value === null || value === '')
-            && window.StorageHandler.fallback
-            && typeof window.StorageHandler.keys[key] !== 'undefined' )
+            && StorageHandler.fallback
+            && typeof StorageHandler.keys[key] !== 'undefined' )
         {
-            value = window.StorageHandler.keys[key];
+            value = StorageHandler.keys[key];
         }
 
         return value;
     },
 
     removeItem(key) {
-        if ( window.StorageHandler.driverIsSupported() ) {
-            window[window.StorageHandler.driver].removeItem(key);
+        if ( StorageHandler.driverIsSupported() ) {
+            window[StorageHandler.driver].removeItem(key);
         }
 
-        delete window.StorageHandler[key];
+        delete StorageHandler[key];
     },
 
     clear() {
-        if ( window.StorageHandler.driverIsSupported() ) {
-            window[window.StorageHandler.driver].clear();
+        if ( StorageHandler.driverIsSupported() ) {
+            window[StorageHandler.driver].clear();
         }
 
-        if ( window.StorageHandler.fallback ) {
-            window.StorageHandler.keys = {};
+        if ( StorageHandler.fallback ) {
+            StorageHandler.keys = {};
         }
     },
 
     key(index) {
-        if ( window.StorageHandler.driverIsSupported() ) {
-            return window[window.StorageHandler.driver].key(index);
+        if ( StorageHandler.driverIsSupported() ) {
+            return window[StorageHandler.driver].key(index);
         }
 
-        if ( window.StorageHandler.fallback ) {
-            return window.StorageHandler.keys[Object.keys(window.StorageHandler.keys)[index]];
+        if ( StorageHandler.fallback ) {
+            return StorageHandler.keys[Object.keys(StorageHandler.keys)[index]];
         }
     }
 };

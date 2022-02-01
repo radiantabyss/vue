@@ -74,7 +74,7 @@ const Items = {
         return new_items;
     },
 
-    findByKey(items, key, value = true) {
+    findByKey(items, key, value = true, single = false) {
         let not_empty = window.handleEmpty(items);
         if ( not_empty !== true ) {
             return not_empty;
@@ -86,8 +86,24 @@ const Items = {
             let index = Array.isArray(items) ? i : Object.keys(items)[i];
 
             if ( items[index][key] == value ) {
-                new_items[index] = items[index];
+                if ( Array.isArray(items) ) {
+                    new_items.push(items[index]);
+                }
+                else {
+                    new_items[index] = items[index];
+                }
             }
+        }
+
+        if ( single ) {
+            if ( Array.isArray(new_items) && new_items.length ) {
+                return new_items[0];
+            }
+            else if ( !Array.isArray(new_items) && Object.keys(new_items).length ) {
+                return new_items[Object.keys(new_items)[0]];
+            }
+
+            return false;
         }
 
         return new_items;
