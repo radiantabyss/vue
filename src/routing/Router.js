@@ -23,12 +23,12 @@ for ( let j = 0; j < files.length; j++ ) {
             }
 
             let namespace = '';
-            let action_path = route.action.__file.replace('src/http/actions/', '').split('/');
-            for ( let i = 0; i < action_path.length - 1; i++ ) {
-                namespace += action_path[i].replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
-                    return s.toUpperCase();
-                }).replace(/ /g, '')+'\\';
-            }
+            // let action_path = route.action.__file.replace('src/http/actions/', '').split('/');
+            // for ( let i = 0; i < action_path.length - 1; i++ ) {
+            //     namespace += action_path[i].replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
+            //         return s.toUpperCase();
+            //     }).replace(/ /g, '')+'\\';
+            // }
 
             Routes.push({
                 package: route.package ? route.package : '',

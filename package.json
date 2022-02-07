@@ -23,5 +23,8 @@
             "Request": "writable",
             "StorageHandler": "writable"
         }
+    },
+    "devDependencies": {
+        "webpack-spritesmith": "^1.0.1"
     }
 }
