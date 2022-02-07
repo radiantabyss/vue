@@ -32,6 +32,10 @@ const StorageHandler = {
     },
 
     setItem(key, value) {
+        if ( typeof value !== 'string' ) {
+            value = JSON.stringify(value);
+        }
+
         if ( StorageHandler.driverIsSupported() ) {
             window[StorageHandler.driver].setItem(key, value);
         }
@@ -55,7 +59,7 @@ const StorageHandler = {
             value = StorageHandler.keys[key];
         }
 
-        return value;
+        return JSON.parse(value);
     },
 
     removeItem(key) {
