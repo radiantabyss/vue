@@ -59,7 +59,13 @@ const StorageHandler = {
             value = StorageHandler.keys[key];
         }
 
-        return JSON.parse(value);
+        try {
+          let parsed = JSON.parse(value);
+          value = parsed;
+        }
+        catch(e) {}
+
+        return value;
     },
 
     removeItem(key) {
