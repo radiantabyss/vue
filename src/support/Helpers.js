@@ -44,6 +44,14 @@ const Helpers = {
     trim(str, chars) {
         return Helpers.rtrim(Helpers.ltrim(str, chars), chars);
     },
+
+    mysql_date() {
+        return new Date().toJSON().slice(0, 10);
+    },
+
+    mysql_datetime() {
+        return new Date().toJSON().slice(0, 19).replace('T', ' ');
+    },
 }
 
 export default Helpers;
