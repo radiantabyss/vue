@@ -10,6 +10,10 @@ const Helpers = {
         });
     },
 
+    camel(str) { 
+        return str.replace(/-./g, x=>x[1].toUpperCase());
+    },
+
     handleEmpty(items) {
         if ( items === false ) {
             return false;
