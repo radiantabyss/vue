@@ -48,6 +48,12 @@ for ( let j = 0; j < files.length; j++ ) {
 const Router = new VueRouter({
     mode: process && process.versions && process.versions.electron ? 'hash' : 'history',
     routes: Routes,
+    scrollBehavior() {
+        return {
+            x: 0,
+            y: 0
+        }
+    }
 });
 
 //run middleware
