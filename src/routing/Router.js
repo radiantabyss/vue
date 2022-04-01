@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Middleware from './Middleware';
+import Actions from './Actions';
 
 Vue.use(VueRouter);
 
@@ -22,18 +23,23 @@ for ( let j = 0; j < files.length; j++ ) {
                 throw `Action missing for ${route.path}`;
             }
 
-            let namespace = '';
-            // let action_path = route.action.__file.replace('src/http/actions/', '').split('/');
-            // for ( let i = 0; i < action_path.length - 1; i++ ) {
-            //     namespace += action_path[i].replace(/-/g, ' ').replace(/_/g, ' ').replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g,function(s) {
-            //         return s.toUpperCase();
-            //     }).replace(/ /g, '')+'\\';
-            // }
+            //get action
+            let split;
+            if ( route.action.match(/\./) ) {
+                split = route.action.split('.');
+            }
+            else {
+                split = route.action.split('/');
+            }
+
+            let name = split[split.length - 1];
+            let namespace = split.slice(0, -1);
+            let action_name = namespace.join('\\') + '\\' + (route.name ? route.name : name);
 
             Routes.push({
                 package: route.package ? route.package : '',
-                name: namespace + (route.name ? route.name : route.action.name),
-                component: route.action,
+                name: action_name,
+                component: getAction(Actions, name, namespace, action_name),
                 path: route.path.replace(/\{([\s\S]+?)\}/g, ':$1'),
                 meta: {
                     middleware,
@@ -42,6 +48,19 @@ for ( let j = 0; j < files.length; j++ ) {
             });
         }
     }
+}
+
+function getAction(Actions, name, namespace, action_name) {
+    if ( !namespace.length ) {
+        let Action = Actions[name];
+        Action.name = action_name.replace(/\\/g, '.');
+        return Action;
+    }
+
+    let first = namespace[0];
+    namespace.shift();
+
+    return getAction(Actions[first], name, namespace, action_name);
 }
 
 //init dispatcher
