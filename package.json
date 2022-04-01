@@ -1,8 +1,8 @@
 {
-    "name": "lumi-vue",
+    "name": "@radiantabyss/lumi-vue",
     "version": "1.0.0",
-    "license": "proprietary",
-    "private": true,
+    "author": "radiantabyss.com",
+    "license": "ISC",
     "eslintConfig": {
         "root": true,
         "env": {
