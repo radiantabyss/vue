@@ -1,6 +1,7 @@
 {
     "name": "lumi-vue",
     "version": "1.0.0",
+    "license": "proprietary",
     "private": true,
     "eslintConfig": {
         "root": true,
