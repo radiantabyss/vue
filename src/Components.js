@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Loader from '@/loader';
-import Helpers from '@lumi/support/Helpers';
+import Helpers from './support/Helpers';
 
 let contexts = Loader.components();
 
