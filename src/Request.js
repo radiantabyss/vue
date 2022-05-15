@@ -108,7 +108,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
                 _event.target.innerHTML = '<i class="sprite-loading spin"></i>';
             }
             else {
-                _event.target.innerHTML = _target_html.replace(/<i .*?<\/i>/, '') + ' <i class="sprite-loading spin"></i>';
+                _event.target.innerHTML = _target_html.replace(/<i .*?<\/i>/, '') + '&nbsp;<i class="sprite-loading spin"></i>';
             }
         }
 
