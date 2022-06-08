@@ -34,7 +34,12 @@ for ( let j = 0; j < files.length; j++ ) {
 
             let name = split[split.length - 1];
             let namespace = split.slice(0, -1);
-            let action_name = namespace.join('\\') + '\\' + (route.name ? route.name : name);
+            let action_name = route.name ? route.name : name;
+
+            if ( namespace.length ) {
+                action_name = namespace.join('\\') + '\\' + action_name;
+            }
+            
             let component = getAction(Actions, name, namespace, action_name);
 
             Routes.push({
