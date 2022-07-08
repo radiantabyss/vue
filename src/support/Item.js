@@ -2,7 +2,7 @@ const Item = {
 	patch(item, data) {
 		return Item.setKeys(item, Object.keys(data), Object.values(data));
 	},
-	
+
     setKey(item, key, value) {
         return Item.setKeys(item, key, value);
     },
@@ -10,7 +10,7 @@ const Item = {
     setKeys(item, keys, values) {
         let not_empty = window.handleEmpty(item);
         if ( not_empty !== true ) {
-            return not_empty;
+            item = {};
         }
 
         if ( !Array.isArray(keys) ) {
@@ -27,7 +27,7 @@ const Item = {
 
         return {...item};
     },
-	
+
 	removeEmptyKeys(item) {
 		let new_item = Array.isArray(item) ? [] : {};
         let count = Array.isArray(item) ? item.length : Object.keys(item).length;
