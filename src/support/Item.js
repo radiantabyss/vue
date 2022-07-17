@@ -40,7 +40,19 @@ const Item = {
         }
 
         return new_item;
-	}
+	},
+
+    deleteKeys(item, keys) {
+		for ( let key of keys ) {
+	        delete item[key];
+		}
+		
+		return {...item};
+    },
+
+    deleteKey(item, key) {
+		return Item.deleteKeys(item, [key]);
+    },
 };
 
 export default Item;
