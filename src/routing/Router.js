@@ -35,11 +35,12 @@ for ( let j = 0; j < files.length; j++ ) {
             let name = split[split.length - 1];
             let namespace = split.slice(0, -1);
             let action_name = route.name ? route.name : name;
+            let domain = namespace.length ? slug(namespace[0]) : '';
 
             if ( namespace.length ) {
                 action_name = namespace.join('\\') + '\\' + action_name;
             }
-            
+
             let component = getAction(Actions, name, namespace, action_name);
 
             Routes.push({
@@ -48,6 +49,7 @@ for ( let j = 0; j < files.length; j++ ) {
                 component: component,
                 path: route.path.replace(/\{([\s\S]+?)\}/g, ':$1'),
                 meta: {
+                    domain,
                     middleware,
                     settings: component.settings ? component.settings : {},
                 },

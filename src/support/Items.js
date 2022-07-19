@@ -8,6 +8,22 @@ const Items = {
         return plucked;
     },
 
+    keyBy(items, key = 'id') {
+        let not_empty = window.handleEmpty(items);
+        if ( not_empty !== true ) {
+            return not_empty;
+        }
+
+        let new_items = {};
+        let count = Array.isArray(items) ? items.length : Object.keys(items).length;
+        for ( let i = 0; i < count; i++ ) {
+            let index = Array.isArray(items) ? i : Object.keys(items)[i];
+            new_items[items[index][key]] = items[index];
+        }
+
+        return new_items;
+    },
+
     groupBy(items, key = 'id') {
         let not_empty = window.handleEmpty(items);
         if ( not_empty !== true ) {
