@@ -94,7 +94,11 @@ function slug(str) {
 const Router = new VueRouter({
     mode: process && process.versions && process.versions.electron ? 'hash' : 'history',
     routes: Routes,
-    scrollBehavior() {
+    scrollBehavior(to, from, savedPosition) {
+        if ( to.meta.settings.disable_scroll ) {
+            return savedPosition;
+        }
+
         return {
             x: 0,
             y: 0
