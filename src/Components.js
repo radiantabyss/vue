@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Loader from '@/loader';
-import Helpers from './support/Helpers';
 
 let contexts = Loader.components();
 
@@ -14,10 +13,10 @@ for ( let i in contexts ) {
             .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
             .toLowerCase();
 
-        name = Helpers.trim(name, '-');
+        name = window.trim(name, '-');
 
         if ( i != '' ) {
-            let package_name = Helpers.trim(i.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase(), '-');
+            let package_name = window.trim(i.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase(), '-');
             name = `${package_name}-${name}`;
         }
 
