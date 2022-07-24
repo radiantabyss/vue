@@ -105,7 +105,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             _target_html = _event.target.innerHTML;
 
             if ( payload._replace_html ) {
-                _event.target.innerHTML = '<svg class="request-spinner"><use :xlink:href="#request-spinner"></use></svg>';
+                _event.target.innerHTML = '<svg class="request-spinner"><use xlink:href="#request-spinner"></use></svg>';
             }
             else {
                 _event.target.innerHTML = _target_html.replace(/<svg .*?<\/svg>/, '') + '&nbsp;<svg class="request-spinner"><use xlink:href="#request-spinner"></use></svg>';
