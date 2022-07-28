@@ -15,6 +15,15 @@ let self = {
         return is_plural ? plural(name) : name;
     },
 
+    url(create_update = false) {
+        if ( create_update ) {
+            return `/${self.get()}/${Router.currentRoute.name.match(/Edit/) ? 'update/' + Router.currentRoute.params.id : 'create'}`;
+        }
+
+        return `/${self.get()}`;
+    },
+
+
     action() {
         let split = Router.currentRoute.name.split('\\');
         return kebab(split[split.length - 1].replace(/Action$/, ''));
