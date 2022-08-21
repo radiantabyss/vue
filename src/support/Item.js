@@ -13,12 +13,17 @@ const Item = {
             item = {};
         }
 
-        if ( !Array.isArray(keys) ) {
-            keys = [keys];
+		if ( Array.isArray(keys) && !Array.isArray(values) ) {
+			let array_values = [];
+			for ( let key of keys ) {
+				array_values.push(values);
+			}
+			values = array_values;
         }
 
-        if ( !Array.isArray(values) ) {
-            values = [values];
+        if ( !Array.isArray(keys) ) {
+            keys = [keys];
+			values = [values];
         }
 
         for ( let i = 0; i < keys.length; i++ ) {
@@ -46,7 +51,7 @@ const Item = {
 		for ( let key of keys ) {
 	        delete item[key];
 		}
-		
+
 		return {...item};
     },
 
