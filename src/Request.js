@@ -32,7 +32,7 @@ axios.interceptors.request.use((request) => {
     return request;
 });
 
-let request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}) {
+let request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}, upload_progress = null) {
     return new Promise((resolve, reject) => {
         //set default base url
         if ( !base_url ) {
@@ -63,13 +63,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             delete payload._event;
         }
 
-        if ( !Object.keys(headers).length ) {
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            };
-        }
-
-        let data = {};
+        let data = new FormData();
 
         //build url
         let url = base_url + edge;
@@ -78,7 +72,9 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             url += '?' + qs.stringify(payload);
         }
         else if ( method == 'POST' ) {
-            data = {...payload};
+            for ( let key in payload ) {
+                data.append(key, payload[key]);
+            }
         }
 
         //set auth token
@@ -117,6 +113,13 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             method,
             url,
             data,
+            onUploadProgress: (e) => {
+                if ( !upload_progress ) {
+                    return;
+                }
+
+                upload_progress(Math.round((e.loaded * 100) / e.total));
+            },
         })
         .then((request_response) => {
             //enable event target
@@ -173,6 +176,11 @@ const Request = {
 
     post(edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}) {
         return request('POST', edge, payload, display_errors, base_url, auth_token, headers);
+    },
+
+    upload(edge, payload = {}, display_errors = false, upload_progress, base_url = null, auth_token = null, headers = {}) {
+        headers['Content-Type'] = 'multipart/form-data';
+        return request('POST', edge, payload, display_errors, base_url, auth_token, headers, upload_progress);
     },
 };
 
