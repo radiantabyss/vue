@@ -49,6 +49,12 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             Alert.hide();
         }
 
+        if ( !Object.keys(headers).length ) {
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            };
+        }
+
         //disable event target
         let _event;
         if ( typeof payload._event !== 'undefined' ) {
@@ -63,7 +69,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             delete payload._event;
         }
 
-        let data = new FormData();
+        let data;
 
         //build url
         let url = base_url + edge;
@@ -72,8 +78,14 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             url += '?' + qs.stringify(payload);
         }
         else if ( method == 'POST' ) {
-            for ( let key in payload ) {
-                data.append(key, payload[key]);
+            if ( headers['Content-Type'] == 'multipart/form-data' ) {
+                data = new FormData()
+                for ( let key in payload ) {
+                    data.append(key, payload[key]);
+                }
+            }
+            else {
+                data = {...payload};
             }
         }
 
