@@ -48,7 +48,7 @@ const Items = {
     find(items, ids) {
         let not_empty = window.handleEmpty(items);
         if ( not_empty !== true ) {
-            return not_empty;
+            return false;
         }
 
         let single = false;
@@ -93,7 +93,7 @@ const Items = {
     findByKey(items, key, value = true, single = false) {
         let not_empty = window.handleEmpty(items);
         if ( not_empty !== true ) {
-            return not_empty;
+            return false;
         }
 
         let new_items = Array.isArray(items) ? [] : {};
