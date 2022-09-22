@@ -73,7 +73,9 @@ const StorageHandler = {
             window[StorageHandler.driver].removeItem(key);
         }
 
-        delete StorageHandler[key];
+        if ( StorageHandler.fallback ) {
+            delete StorageHandler.keys[key];
+        }
     },
 
     clear() {
