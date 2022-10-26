@@ -17,7 +17,7 @@ const Cookie = {
             date.setTime(date.getTime() + (duration*24*60*60*1000));
             expires = "; expires=" + date.toUTCString();
         }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/;domain="+window.getBaseDomain();
+        document.cookie = key + "=" + (value || "")  + expires + "; path=/;domain="+window.location.host;
     },
 
     delete(key) {
