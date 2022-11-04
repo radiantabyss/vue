@@ -36,7 +36,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
     return new Promise((resolve, reject) => {
         //set default base url
         if ( !base_url ) {
-            base_url = process.env.VUE_APP_API_URL;
+            base_url = process.env.VUE_APP_BACK_URL;
         }
 
         //set default auth token
