@@ -1,4 +1,4 @@
-const Items = {
+const self = {
     pluck(items, key = 'id') {
         let plucked = [];
         for (let i = 0; i < items.length; i++) {
@@ -6,6 +6,10 @@ const Items = {
         }
 
         return plucked;
+    },
+
+    spread(items) {
+        return JSON.parse(JSON.stringify(items));
     },
 
     keyBy(items, key = 'id') {
@@ -163,7 +167,7 @@ const Items = {
         let id = data.id;
         delete data.id;
 
-        return Items.setKeys(items, id, Object.keys(data), Object.values(data));
+        return self.setKeys(items, id, Object.keys(data), Object.values(data));
     },
 
     replace(items, item) {
@@ -234,7 +238,7 @@ const Items = {
     },
 
     setKey(items, id, key, value) {
-        return Items.setKeys(items, id, key, value);
+        return self.setKeys(items, id, key, value);
     },
 
     setKeys(items, ids, keys, values) {
@@ -279,7 +283,7 @@ const Items = {
     },
 
     toggleKey(items, id, key) {
-        return Items.toggleKeys(items, id, key);
+        return self.toggleKeys(items, id, key);
     },
 
     toggleKeys(items, ids, keys) {
@@ -323,4 +327,8 @@ const Items = {
     },
 };
 
-export default Items;
+window.pluck = self.pluck;
+window.keyBy = self.keyBy;
+window.groupBy = self.groupBy;
+
+export default self;
