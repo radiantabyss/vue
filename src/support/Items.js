@@ -328,6 +328,7 @@ const self = {
 };
 
 window.pluck = self.pluck;
+window.spread = self.spread;
 window.keyBy = self.keyBy;
 window.groupBy = self.groupBy;
 
