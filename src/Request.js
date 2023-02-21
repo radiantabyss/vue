@@ -55,18 +55,33 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             };
         }
 
-        //disable event target
+        //target button
+        let _button;
+        if ( typeof payload._button !== 'undefined' ) {
+            _button = payload._button;
+            delete payload._button;
+        }
+
+        //event
         let _event;
         if ( typeof payload._event !== 'undefined' ) {
             _event = payload._event;
             _event.preventDefault();
 
-            if ( _event.target.disabled ) {
+            if ( typeof _button === 'undefined' ) {
+                _button = _event.target;
+            }
+
+            delete payload._event;
+        }
+
+        //check if button is disabled
+        if ( typeof _button !== 'undefined' ) {
+            if ( _button.disabled ) {
                 return;
             }
 
-            _event.target.disabled = true;
-            delete payload._event;
+            _button.disabled = true;
         }
 
         let data;
@@ -108,15 +123,15 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
         }
 
         //set loading spinner
-        let _target_html;
-        if ( typeof _event !== 'undefined' ) {
-            _target_html = _event.target.innerHTML;
+        let _button_html;
+        if ( typeof _button !== 'undefined' ) {
+            _button_html = _button.innerHTML;
 
             if ( payload._replace_html ) {
-                _event.target.innerHTML = '<svg class="request-spinner"><use xlink:href="#request-spinner"></use></svg>';
+                _button.innerHTML = '<svg class="request-spinner"><use xlink:href="#request-spinner"></use></svg>';
             }
             else {
-                _event.target.innerHTML = _target_html + '&nbsp;<svg class="request-spinner"><use xlink:href="#request-spinner"></use></svg>';
+                _button.innerHTML = _button_html + '&nbsp;<svg class="request-spinner"><use xlink:href="#request-spinner"></use></svg>';
             }
         }
 
@@ -135,9 +150,9 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
         })
         .then((request_response) => {
             //enable event target
-            if ( typeof _event !== 'undefined' ) {
-                _event.target.disabled = false;
-                _event.target.innerHTML = _target_html;
+            if ( typeof _button !== 'undefined' ) {
+                _button.disabled = false;
+                _button.innerHTML = _button_html;
             }
 
             let response = request_response.data;
@@ -148,8 +163,8 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             else {
                 let errors = formatErrors(response);
 
-                if ( display_errors  ) {
-                    Alert.show(errors.join('<br/>'), 'error', 7000, _event.target);
+                if ( display_errors ) {
+                    Alert.show(errors.join('<br/>'), 'error', 7000, _button);
                 }
 
                 reject(response.data.errors);
@@ -161,19 +176,21 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             if ( error instanceof TypeError ) {
                 errors = [error];
             }
+            else if ( error.constructor.name == 'AxiosError' ) {
+                errors = [error.response.statusText];
+            }
             else {
                 errors = formatErrors(error.response);
             }
 
             if ( display_errors ) {
-                let target = _event ? _event.target : null;
-                Alert.show(errors.join('<br/>'), 'error', 7000, target);
+                Alert.show(errors.join('<br/>'), 'error', 7000, typeof _button !== 'undefined' ? _button : null);
             }
 
             //enable event target
-            if ( typeof _event !== 'undefined' ) {
-                _event.target.disabled = false;
-                _event.target.innerHTML = _target_html;
+            if ( typeof _button !== 'undefined' ) {
+                _button.disabled = false;
+                _button.innerHTML = _button_html;
             }
 
             reject(error.response.data.errors, error.response.status);
