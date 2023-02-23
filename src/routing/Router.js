@@ -117,7 +117,7 @@ Router.beforeEach((to, from, next) => {
             next();
         }
         else {
-            next(redirect);
+            Router.push(redirect);
         }
     });
 });
