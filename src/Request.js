@@ -15,6 +15,9 @@ const formatErrors = function(response) {
             }
         }
     }
+    else if ( response.statusText ) {
+        errors.push(response.statusText);
+    }
 
     return errors;
 }
@@ -175,9 +178,6 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
 
             if ( error instanceof TypeError ) {
                 errors = [error];
-            }
-            else if ( error.constructor.name == 'AxiosError' ) {
-                errors = [error.response.statusText];
             }
             else {
                 errors = formatErrors(error.response);
