@@ -92,7 +92,7 @@ function slug(str) {
 
 //init dispatcher
 const Router = new VueRouter({
-    mode: typof IS_ELECTRON != 'undefined' && IS_ELECTRON ? 'hash' : 'history',
+    mode: typeof IS_ELECTRON != 'undefined' && IS_ELECTRON ? 'hash' : 'history',
     routes: Routes,
     scrollBehavior(to, from, savedPosition) {
         if ( to.meta.settings && to.meta.settings.disable_scroll ) {
