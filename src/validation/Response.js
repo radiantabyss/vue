@@ -1,4 +1,4 @@
-const Response = {
+let self = {
     error(messages) {
         return {
             success: false,
@@ -13,4 +13,4 @@ const Response = {
     }
 }
 
-export default Response;
+export default self;

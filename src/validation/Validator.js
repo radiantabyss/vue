@@ -1,6 +1,6 @@
 import * as ValidatorJS from 'validatorjs';
 
-const Validator = {
+let self = {
     make(data, rules, messages) {
         //format messages
         let formatted_messages = {};
@@ -24,4 +24,4 @@ const Validator = {
     }
 }
 
-export default Validator;
+export default self;

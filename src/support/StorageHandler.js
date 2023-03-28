@@ -1,10 +1,10 @@
-const StorageHandler = {
+let self = {
     driver: 'localStorage',
     fallback: true,
     keys: {},
 
     init() {
-        if ( !StorageHandler.fallback ) {
+        if ( !self.fallback ) {
             return;
         }
 
@@ -13,7 +13,7 @@ const StorageHandler = {
         }
 
         for ( let key in window.memoryStorage ) {
-            StorageHandler.keys[key] = window.memoryStorage[key];
+            self.keys[key] = window.memoryStorage[key];
         }
 
         delete window.memoryStorage;
@@ -22,8 +22,8 @@ const StorageHandler = {
     driverIsSupported() {
         let test_key = '__test_key';
         try {
-            window[StorageHandler.driver].setItem(test_key, test_key);
-            window[StorageHandler.driver].removeItem(test_key);
+            window[self.driver].setItem(test_key, test_key);
+            window[self.driver].removeItem(test_key);
             return true;
         }
         catch(e) {
@@ -36,27 +36,27 @@ const StorageHandler = {
             value = JSON.stringify(value);
         }
 
-        if ( StorageHandler.driverIsSupported() ) {
-            window[StorageHandler.driver].setItem(key, value);
+        if ( self.driverIsSupported() ) {
+            window[self.driver].setItem(key, value);
         }
 
-        if ( StorageHandler.fallback ) {
-            StorageHandler.keys[key] = value;
+        if ( self.fallback ) {
+            self.keys[key] = value;
         }
     },
 
     getItem(key) {
         let value;
 
-        if ( StorageHandler.driverIsSupported() ) {
-            value = window[StorageHandler.driver].getItem(key);
+        if ( self.driverIsSupported() ) {
+            value = window[self.driver].getItem(key);
         }
 
         if ( (typeof value === 'undefined' || value === null || value === '')
-            && StorageHandler.fallback
-            && typeof StorageHandler.keys[key] !== 'undefined' )
+            && self.fallback
+            && typeof self.keys[key] !== 'undefined' )
         {
-            value = StorageHandler.keys[key];
+            value = self.keys[key];
         }
 
         try {
@@ -69,34 +69,34 @@ const StorageHandler = {
     },
 
     removeItem(key) {
-        if ( StorageHandler.driverIsSupported() ) {
-            window[StorageHandler.driver].removeItem(key);
+        if ( self.driverIsSupported() ) {
+            window[self.driver].removeItem(key);
         }
 
-        if ( StorageHandler.fallback ) {
-            delete StorageHandler.keys[key];
+        if ( self.fallback ) {
+            delete self.keys[key];
         }
     },
 
     clear() {
-        if ( StorageHandler.driverIsSupported() ) {
-            window[StorageHandler.driver].clear();
+        if ( self.driverIsSupported() ) {
+            window[self.driver].clear();
         }
 
-        if ( StorageHandler.fallback ) {
-            StorageHandler.keys = {};
+        if ( self.fallback ) {
+            self.keys = {};
         }
     },
 
     key(index) {
-        if ( StorageHandler.driverIsSupported() ) {
-            return window[StorageHandler.driver].key(index);
+        if ( self.driverIsSupported() ) {
+            return window[self.driver].key(index);
         }
 
-        if ( StorageHandler.fallback ) {
-            return StorageHandler.keys[Object.keys(StorageHandler.keys)[index]];
+        if ( self.fallback ) {
+            return self.keys[Object.keys(self.keys)[index]];
         }
     }
 };
 
-export default StorageHandler;
+export default self;

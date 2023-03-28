@@ -1,10 +1,10 @@
-const Item = {
+let self = {
 	patch(item, data) {
-		return Item.setKeys(item, Object.keys(data), Object.values(data));
+		return self.setKeys(item, Object.keys(data), Object.values(data));
 	},
 
     setKey(item, key, value) {
-        return Item.setKeys(item, key, value);
+        return self.setKeys(item, key, value);
     },
 
     setKeys(item, keys, values) {
@@ -56,8 +56,8 @@ const Item = {
     },
 
     deleteKey(item, key) {
-		return Item.deleteKeys(item, [key]);
+		return self.deleteKeys(item, [key]);
     },
 };
 
-export default Item;
+export default self;

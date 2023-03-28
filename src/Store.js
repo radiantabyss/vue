@@ -48,8 +48,8 @@ function setNamespace(Modules, name, namespace, context) {
     setNamespace(Modules[first].modules, name, namespace, context);
 }
 
-const Store = new Vuex.Store({
+let self = new Vuex.Store({
     modules: Modules,
 });
 
-export default Store;
+export default self;

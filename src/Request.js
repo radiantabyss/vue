@@ -198,7 +198,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
     });
 }
 
-const Request = {
+let self = {
     get(edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}) {
         return request('GET', edge, payload, display_errors, base_url, auth_token, headers);
     },
@@ -213,4 +213,4 @@ const Request = {
     },
 };
 
-export default Request;
+export default self;

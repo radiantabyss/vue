@@ -1,4 +1,4 @@
-const Cookie = {
+let self = {
     get(key) {
         key = key + "=";
         var ca = document.cookie.split(';');
@@ -21,8 +21,8 @@ const Cookie = {
     },
 
     delete(key) {
-        window.Cookie.set(key, null, -1);
+        self.set(key, null, -1);
     },
 };
 
-export default Cookie;
+export default self;

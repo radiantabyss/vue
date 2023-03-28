@@ -12,8 +12,8 @@ import StorageHandler from './support/StorageHandler';
 import Alert from './Alert';
 import Request from './Request';
 
-const ServiceProvider = {
-    register() {
+let self = {
+    run() {
         window.Item = Item;
         window.Items = Items;
 
@@ -34,4 +34,4 @@ const ServiceProvider = {
     }
 }
 
-export default ServiceProvider;
+export default self;

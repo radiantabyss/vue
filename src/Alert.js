@@ -1,4 +1,4 @@
-const Alert = {
+let self = {
     show(message, type = 'success', duration = null) {
         if ( typeof message != 'string' ) {
             message = message.join('<br/>');
@@ -16,4 +16,4 @@ const Alert = {
     },
 };
 
-export default Alert;
+export default self;
