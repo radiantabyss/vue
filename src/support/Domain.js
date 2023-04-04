@@ -3,26 +3,52 @@ import Router from './../routing/Router';
 let self = {
     get() {
         let split = Router.currentRoute.name.split('\\');
-        if ( split.length != 2 ) {
+        split.pop();
+
+        if ( !split.length ) {
             return '';
         }
 
-        return kebab(split[0]);
+        let url = '';
+        for ( let i = 0; i < split.length; i++ ) {
+            url += `/${kebab(split[i])}`;
+        }
+
+        return url;
     },
 
     name(is_plural = false) {
-        let name = to_words(self.get());
+        let split = Router.currentRoute.name.split('\\');
+        split.pop();
+
+        let name = '';
+        for ( let i = 0; i < split.length; i++ ) {
+            name += to_words(split[i]) + ' ';
+        }
+
+        name = name.trim();
         return is_plural ? plural(name) : name;
     },
 
     url(create_update = false) {
-        if ( create_update ) {
-            return `/${self.get()}/${Router.currentRoute.name.match(/Edit/) ? 'update/' + Router.currentRoute.params.id : 'create'}`;
+        let split = Router.currentRoute.name.split('\\');
+        split.pop();
+
+        if ( !split.length ) {
+            return '';
         }
 
-        return `/${self.get()}`;
-    },
+        let url = '';
+        for ( let i = 0; i < split.length; i++ ) {
+            url += `/${kebab(split[i])}`;
+        }
 
+        if ( create_update ) {
+            return `${url}/${Router.currentRoute.name.match(/Edit/) ? 'update/' + Router.currentRoute.params.id : 'create'}`;
+        }
+
+        return url;
+    },
 
     action() {
         let split = Router.currentRoute.name.split('\\');

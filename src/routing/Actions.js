@@ -18,7 +18,7 @@ for ( let i in contexts ) {
             split.unshift('Package');
         }
 
-        if ( !name.match(/Action$/) ) {
+        if ( !name.match(/Action$/) || name == 'Action' ) {
             continue;
         }
 
