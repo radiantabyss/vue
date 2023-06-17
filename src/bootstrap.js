@@ -4,6 +4,7 @@ import Cookie from './support/Cookie';
 import Directives from './support/Directives';
 import Domain from './support/Domain';
 import Filters from './support/Filters';
+import Gate from './support/Gate';
 import Helpers from './support/Helpers';
 import Item from './support/Item';
 import Items from './support/Items';
@@ -31,6 +32,9 @@ let self = {
 
         Vue.use(Directives);
         Vue.use(Filters);
+
+        window.Gate = Gate;
+        Vue.prototype.Gate = Gate;
     }
 }
 

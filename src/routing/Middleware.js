@@ -1,22 +1,12 @@
-import Loader from '@/loader';
-
 let Middleware = {};
-let contexts = Loader.middleware();
+let context = require.context(`@/Http/Middleware/`, true, /\.js/);
+let files = context.keys();
 
-for ( let i in contexts ) {
-    let files = contexts[i].keys();
+for ( let i = 0; i < files.length; i++ ) {
+    let split = files[i].split('/');
+    let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
 
-    for ( let j = 0; j < files.length; j++ ) {
-        let split = files[j].split('/');
-        let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
-
-        //set package namespace
-        if ( i != '' ) {
-            name = `${i}::${name}`;
-        }
-
-        Middleware[name] = contexts[i](files[j]).default;
-    }
+    Middleware[name] = context(files[i]).default;
 }
 
 function runMiddleware(to, from, resolve, reject, i = 0) {

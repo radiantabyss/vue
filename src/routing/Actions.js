@@ -1,29 +1,19 @@
-import Loader from '@/loader';
-
 let Actions = {};
-let contexts = Loader.actions();
+let context = require.context(`@/Domains/`, true, /\.vue/);
+let files = context.keys();
 
-for ( let i in contexts ) {
-    let files = contexts[i].keys();
+for ( let i = 0; i < files.length; i++ ) {
+    let split = files[i].split('/');
+    split.shift();
+    let name = split[split.length - 1].replace('.vue', '');
+    split.pop();
+    split.pop();
 
-    for ( let j = 0; j < files.length; j++ ) {
-        let split = files[j].split('/');
-        split.shift();
-        let name = split[split.length - 1].replace('.vue', '');
-        split.pop();
-
-        //check namespace
-        if ( i != '' ) {
-            split.unshift(i);
-            split.unshift('Package');
-        }
-
-        if ( !name.match(/Action$/) || name == 'Action' ) {
-            continue;
-        }
-
-        setNamespace(Actions, name, split, contexts[i](files[j]).default);
+    if ( !name.match(/Action$/) || name == 'Action' ) {
+        continue;
     }
+
+    setNamespace(Actions, name, split, context(files[i]).default);
 }
 
 function setNamespace(Actions, name, namespace, context) {

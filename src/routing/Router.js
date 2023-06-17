@@ -7,17 +7,17 @@ Vue.use(VueRouter);
 
 //load routes
 let Routes = [];
-let context = require.context(`@/routes/`, true, /\.js/);
+let context = require.context(`@/Routes/`, true, /\.js/);
 let files = context.keys();
 
-for ( let j = 0; j < files.length; j++ ) {
-    let groups = context(files[j]).default;
+for ( let i = 0; i < files.length; i++ ) {
+    let groups = context(files[i]).default;
 
-    for ( let k = 0; k < groups.length; k++ ) {
-        let middleware = groups[k].middleware;
+    for ( let j = 0; j < groups.length; j++ ) {
+        let middleware = groups[j].middleware;
 
-        for ( let l = 0; l < groups[k].routes.length; l++ ) {
-            let route = groups[k].routes[l];
+        for ( let k = 0; k < groups[j].routes.length; k++ ) {
+            let route = groups[j].routes[k];
 
             if ( !route.action ) {
                 throw `Action missing for ${route.path}`;
@@ -60,9 +60,14 @@ for ( let j = 0; j < files.length; j++ ) {
 
 function getAction(Actions, name, namespace, action_name) {
     if ( !namespace.length ) {
-        let Action = Actions[name];
-        Action.name = action_name.replace(/\\/g, '.');
-        return Action;
+        try {
+            let Action = Actions[name];
+            Action.name = action_name.replace(/\\/g, '.');
+            return Action;
+        }
+        catch(e) {
+            throw `Action ${action_name} doesn't exist.`;
+        }
     }
 
     let first = namespace[0];
@@ -94,6 +99,7 @@ function slug(str) {
 const Router = new VueRouter({
     mode: typeof IS_ELECTRON != 'undefined' && IS_ELECTRON ? 'hash' : 'history',
     routes: Routes,
+    duplicateNavigationPolicy: 'reload',
     scrollBehavior(to, from, savedPosition) {
         if ( to.meta.settings && to.meta.settings.disable_scroll ) {
             return savedPosition;

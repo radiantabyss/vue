@@ -1,25 +1,16 @@
 import Vue from 'vue';
-import Loader from '@/loader';
 
-let contexts = Loader.components();
+let context = require.context(`@/Domains/Common/Components/`, true, /\.vue/);
+let files = context.keys();
 
-for ( let i in contexts ) {
-    let files = contexts[i].keys();
+for ( let i = 0; i < files.length; i++ ) {
+    let split = files[i].split('/');
+    let name = split[split.length - 1].replace('.vue', '')
+        .replace(/Component$/g, '')
+        .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
+        .toLowerCase();
 
-    for ( let j = 0; j < files.length; j++ ) {
-        let split = files[j].split('/');
-        let name = split[split.length - 1].replace('.vue', '')
-            .replace(/Component$/g, '')
-            .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
-            .toLowerCase();
+    name = window.trim(name, '-');
 
-        name = window.trim(name, '-');
-
-        if ( i != '' ) {
-            let package_name = window.trim(i.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase(), '-');
-            name = `${package_name}-${name}`;
-        }
-
-        Vue.component(name, contexts[i](files[j]).default);
-    }
+    Vue.component(name, context(files[i]).default);
 }

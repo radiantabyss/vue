@@ -1,29 +1,19 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Loader from '@/loader';
 
 Vue.use(Vuex);
 
 const Modules = {};
-let contexts = Loader.store();
+let context = require.context(`@/Store/`, true, /\.js/);
+let files = context.keys();
 
-for ( let i in contexts ) {
-    let files = contexts[i].keys();
+for ( let i = 0; i < files.length; i++ ) {
+    let split = files[i].split('/');
+    split.shift();
+    let name = split[split.length - 1].replace('.js', '');
+    split.pop();
 
-    for ( let j = 0; j < files.length; j++ ) {
-        let split = files[j].split('/');
-        split.shift();
-        let name = split[split.length - 1].replace('.js', '');
-        split.pop();
-
-        //check namespace
-        if ( i != '' ) {
-            split.unshift(i);
-            split.unshift('Package');
-        }
-
-        setNamespace(Modules, name, split, contexts[i](files[j]).default);
-    }
+    setNamespace(Modules, name, split, context(files[i]).default);
 }
 
 function setNamespace(Modules, name, namespace, context) {
