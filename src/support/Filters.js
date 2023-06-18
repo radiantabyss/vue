@@ -59,6 +59,10 @@ let self = {
             return str.replace(/y$/, 'ies');
         }
 
+        if ( str.match(/x$/) ) {
+            return str.replace(/x$/, 'xes');
+        }
+
         return str+'s';
     },
 }
