@@ -100,9 +100,10 @@ const Router = new VueRouter({
     mode: typeof IS_ELECTRON != 'undefined' && IS_ELECTRON ? 'hash' : 'history',
     routes: Routes,
     duplicateNavigationPolicy: 'reload',
-    scrollBehavior(to, from, savedPosition) {
-        if ( to.meta.settings && to.meta.settings.disable_scroll ) {
-            return savedPosition;
+    scrollBehavior(to, from, scroll) {
+        if ( (to.meta.settings && to.meta.settings.disable_scroll) 
+            || (from.name == to.name && (!to.meta.settings || !to.meta.settings.force_scroll)) ) {
+            return scroll;
         }
 
         return {
