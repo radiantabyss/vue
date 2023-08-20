@@ -1,6 +1,6 @@
 {
     "name": "@radiantabyss/lumi-vue",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "author": "radiantabyss.com",
     "license": "ISC",
     "eslintConfig": {
