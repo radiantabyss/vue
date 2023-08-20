@@ -10,7 +10,11 @@ import Item from './support/Item';
 import Items from './support/Items';
 import StorageHandler from './support/StorageHandler';
 
+import './Components';
+import './Modals';
+
 import Alert from './Alert';
+import Mixins from './Mixins';
 import Request from './Request';
 
 let self = {
@@ -23,6 +27,7 @@ let self = {
         window.StorageHandler = StorageHandler;
 
         window.Alert = Alert;
+        window.Mixins = Mixins;
         window.Request = Request;
 
         //make usable inside template
