@@ -1,5 +1,6 @@
 import Vue from 'vue';
 
+import './Mixins';
 import Cookie from './support/Cookie';
 import Directives from './support/Directives';
 import Domain from './support/Domain';
@@ -14,7 +15,6 @@ import './Components';
 import './Modals';
 
 import Alert from './Alert';
-import Mixins from './Mixins';
 import Request from './Request';
 
 let self = {
@@ -27,7 +27,6 @@ let self = {
         window.StorageHandler = StorageHandler;
 
         window.Alert = Alert;
-        window.Mixins = Mixins;
         window.Request = Request;
 
         //make usable inside template

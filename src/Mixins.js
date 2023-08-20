@@ -9,4 +9,4 @@ for ( let i = 0; i < files.length; i++ ) {
     Mixins[name] = context(files[i]).default;
 }
 
-export default Mixins;
+window.Mixins = Mixins;
