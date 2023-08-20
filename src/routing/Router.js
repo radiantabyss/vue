@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Middleware from './Middleware';
 import Actions from './Actions';
+import StorageHandler from './../support/StorageHandler';
 
 Vue.use(VueRouter);
 
@@ -101,7 +102,7 @@ const Router = new VueRouter({
     routes: Routes,
     duplicateNavigationPolicy: 'reload',
     scrollBehavior(to, from, scroll) {
-        if ( (to.meta.settings && to.meta.settings.disable_scroll) 
+        if ( (to.meta.settings && to.meta.settings.disable_scroll)
             || (from.name == to.name && (!to.meta.settings || !to.meta.settings.force_scroll)) ) {
             return scroll;
         }
@@ -127,6 +128,11 @@ Router.beforeEach((to, from, next) => {
             Router.push(redirect);
         }
     });
+});
+
+//save previous route
+Router.afterEach((to, from) => {
+    StorageHandler.setItem('_previous_route', from.fullPath != '/' ? from.fullPath : '');
 });
 
 export default Router;
