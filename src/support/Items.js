@@ -192,10 +192,18 @@ const self = {
         return new_items;
     },
 
-    delete(items, id) {
+    delete(items, ids) {
         let not_empty = window.handleEmpty(items);
         if ( not_empty !== true ) {
             return not_empty;
+        }
+
+        if ( !Array.isArray(ids) ) {
+            if ( typeof ids === 'string' ) {
+                ids = parseInt(ids);
+            }
+
+            ids = [ids];
         }
 
         let new_items = Array.isArray(items) ? [] : {};
@@ -203,7 +211,7 @@ const self = {
         for ( let i = 0; i < count; i++ ) {
             let index = Array.isArray(items) ? i : Object.keys(items)[i];
 
-            if ( items[index].id == id ) {
+            if ( ids.includes(items[index].id) ) {
                 continue;
             }
 

@@ -12,26 +12,25 @@ const Directives = {
                 const { handler, exclude } = binding.value
                 // This variable indicates if the clicked element is excluded
                 let clickedOnExcludedEl = false
-                exclude.forEach(refName => {
-                    // We only run this code if we haven't detected
-                    // any excluded element yet
-                    if (!clickedOnExcludedEl) {
-                        // Get the element using the reference name
-                        const excludedEl = vnode.context.$refs[refName]
-                        // See if this excluded element
-                        // is the same element the user just clicked on
-                        if ( excludedEl ) {
-                            clickedOnExcludedEl = excludedEl.contains(e.target)
-                        }
+
+                function checkExcluded(el, target) {
+                    if (el._isVue) {
+                        el.$children.forEach(child => checkExcluded(child.$el, target));
                     }
-                })
-                // We check to see if the clicked element is not
-                // the dialog element and not excluded
+                    else if (el.contains(target)) {
+                        clickedOnExcludedEl = true;
+                    }
+                }
+
+                exclude.forEach(refName => {
+                    const excludedEl = vnode.context.$refs[refName];
+                    if (excludedEl) {
+                        checkExcluded(excludedEl, e.target);
+                    }
+                });
+
                 if (!el.contains(e.target) && !clickedOnExcludedEl) {
-                    // If the clicked element is outside the dialog
-                    // and not the button, then call the outside-click handler
-                    // from the same component this directive is used in
-                    vnode.context[handler]()
+                    vnode.context[handler]();
                 }
             }
             // Register click/touchstart event listeners on the whole page
