@@ -26,7 +26,12 @@ let self = {
             name += to_words(split[i]) + ' ';
         }
 
-        name = name.trim();
+        name = name.split('').map((letter, idx) => {
+            return letter.toUpperCase() === letter
+            ? `${idx !== 0 ? ' ' : ''}${letter}`
+            : letter;
+        }).join('').trim();
+
         return is_plural ? plural(name) : name;
     },
 

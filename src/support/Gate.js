@@ -39,7 +39,7 @@ let self = {
 
     check(gate) {
         if ( typeof self.gates[gate] !== 'function' ) {
-            throw new Error(`Gate ${gate} does not exist.`);
+            throw `Gate ${gate} does not exist.`;
         }
     }
 }
