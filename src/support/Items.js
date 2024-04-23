@@ -333,6 +333,26 @@ const self = {
 
         return copy;
     },
+
+    next(items, current, key = 'id')  {
+        for ( let i = 0; i < items.length; i++ ) {
+            if ( items[i][key] == current[key] && i < items.length - 1 ) {
+                return items[i + 1];
+            }
+        }
+
+        return false;
+    },
+
+    prev(items, current, key = 'id')  {
+        for ( let i = items.length - 1; i >= 0; i-- ) {
+            if ( items[i][key] == current[key] && i > 0 ) {
+                return items[i - 1];
+            }
+        }
+
+        return false;
+    },
 };
 
 window.pluck = self.pluck;
