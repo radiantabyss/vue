@@ -30,7 +30,10 @@ let self = {
             return letter.toUpperCase() === letter
             ? `${idx !== 0 ? ' ' : ''}${letter}`
             : letter;
-        }).join('').trim();
+        })
+        .join('')
+        .trim()
+        .replace(/\s+/, ' ');
 
         return is_plural ? plural(name) : name;
     },
