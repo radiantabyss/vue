@@ -70,7 +70,7 @@ const self = {
         for ( let i = 0; i < count; i++ ) {
             let index = Array.isArray(items) ? i : Object.keys(items)[i];
 
-            if ( ids.includes(items[index].id) ) {
+            if ( ids.includes(parseInt(items[index].id)) ) {
                 if ( Array.isArray(items) ) {
                     new_items.push(items[index]);
                 }
@@ -211,7 +211,7 @@ const self = {
         for ( let i = 0; i < count; i++ ) {
             let index = Array.isArray(items) ? i : Object.keys(items)[i];
 
-            if ( ids.includes(items[index].id) ) {
+            if ( ids.includes(parseInt(items[index].id)) ) {
                 continue;
             }
 
@@ -280,7 +280,7 @@ const self = {
         for ( let i = 0; i < count; i++ ) {
             let index = Array.isArray(items) ? i : Object.keys(items)[i];
 
-            if ( ids.includes(items[index].id) ) {
+            if ( ids.includes(parseInt(items[index].id)) ) {
                 for ( let j = 0; j < keys.length; j++ ) {
                     items[i][keys[j]] = values[j];
                 }
@@ -316,7 +316,7 @@ const self = {
         for ( let i = 0; i < count; i++ ) {
             let index = Array.isArray(items) ? i : Object.keys(items)[i];
 
-            if ( ids.includes(items[index].id) ) {
+            if ( ids.includes(parseInt(items[index].id)) ) {
                 for ( let j = 0; j < keys.length; j++ ) {
                     items[index][keys[j]] = !items[index][keys[j]];
                 }
