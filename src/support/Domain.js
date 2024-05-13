@@ -1,4 +1,4 @@
-import Router from './../routing/Router';
+import Router from './../Routing/Router';
 
 let self = {
     get() {
