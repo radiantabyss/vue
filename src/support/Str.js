@@ -196,15 +196,4 @@ let self = {
     },
 }
 
-//register filters
-for ( let filter in self ) {
-    window[filter] = self[filter];
-}
-
-export default {
-    install(Vue) {
-        for ( let filter in self ) {
-            Vue.filter(filter, self[filter]);
-        }
-    }
-}
+export default self;

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 //default directives
-import CloseableDirective from './Directives/ClosableDirective';
+import ClosableDirective from './Directives/ClosableDirective';
 import FocusDirective from './Directives/FocusDirective';
 import GateDirective from './Directives/GateDirective';
 import PermissionDirective from './Directives/PermissionDirective';
