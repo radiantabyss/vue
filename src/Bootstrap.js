@@ -1,6 +1,9 @@
 import Vue from 'vue';
 
+import './Components';
+import './Directives';
 import './Mixins';
+
 import Alert from './Alert';
 import Cookie from './Support/Cookie';
 import Confirm from './Confirm';
@@ -11,10 +14,7 @@ import Item from './Support/Item';
 import Items from './Support/Items';
 import Request from './Request';
 import StorageHandler from './Support/StorageHandler';
-
-import './Components';
-import './Directives';
-import './Mixins';
+import Str from './Support/Str';
 
 let self = {
     run() {
