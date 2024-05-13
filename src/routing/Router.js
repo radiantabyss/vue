@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Middleware from './Middleware';
 import Actions from './Actions';
-import StorageHandler from './../support/StorageHandler';
+import StorageHandler from './../Support/StorageHandler';
 
 Vue.use(VueRouter);
 
