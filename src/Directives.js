@@ -1,17 +1,6 @@
 import Vue from 'vue';
 import Str from './Support/Str';
 
-//default directives
-import ClosableDirective from './Directives/ClosableDirective';
-import FocusDirective from './Directives/FocusDirective';
-import GateDirective from './Directives/GateDirective';
-import PermissionDirective from './Directives/PermissionDirective';
-
-Vue.directive('closable', ClosableDirective);
-Vue.directive('focus', FocusDirective);
-Vue.directive('gate', GateDirective);
-Vue.directive('permission', PermissionDirective);
-
 //project-specific directives
 let context = require.context(`@/Directives/`, true, /\.js/);
 let files = context.keys();

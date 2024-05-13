@@ -1,17 +1,6 @@
 import Vue from 'vue';
 import Str from './Support/Str';
 
-//default components
-import AlertComponent from './Components/AlertComponent';
-import ConfirmComponent from './Components/ConfirmComponent';
-import GateComponent from './Components/GateComponent';
-import PermissionComponent from './Components/PermissionComponent';
-
-Vue.component('alert', AlertComponent);
-Vue.component('confirm', ConfirmComponent);
-Vue.component('gate', GateComponent);
-Vue.component('permission', PermissionComponent);
-
 //project-specific components
 let context = require.context('@/Components/', true, /\.vue/);
 let files = context.keys();
