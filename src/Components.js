@@ -7,6 +7,11 @@ import ConfirmComponent from './Components/ConfirmComponent';
 import GateComponent from './Components/GateComponent';
 import PermissionComponent from './Components/PermissionComponent';
 
+Vue.directive('alert', AlertComponent);
+Vue.directive('confirm', ConfirmComponent);
+Vue.directive('gate', GateComponent);
+Vue.directive('permission', PermissionComponent);
+
 //project-specific components
 let context = require.context('@/Components/', true, /\.vue/);
 let files = context.keys();
