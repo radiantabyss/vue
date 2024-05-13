@@ -167,7 +167,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
                 let errors = formatErrors(response);
 
                 if ( display_errors ) {
-                    Alert.show(errors.join('<br/>'), 'error', 7000, _button);
+                    Alert.error(errors.join('<br/>'), 7000);
                 }
 
                 reject(response.data.errors);
@@ -184,7 +184,7 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             }
 
             if ( display_errors ) {
-                Alert.show(errors.join('<br/>'), 'error', 7000, typeof _button !== 'undefined' ? _button : null);
+                Alert.error(errors.join('<br/>'), 7000);
             }
 
             //enable event target
