@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 let self = {
     bind(el, binding) {
         // Create a placeholder comment node

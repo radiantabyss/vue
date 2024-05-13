@@ -105,7 +105,7 @@ let self = {
         });
     },
 
-    ordinalSuffix(i) {
+    ordinal_suffix(i) {
         var j = i % 10,
             k = i % 100;
         if (j == 1 && k != 11) {
@@ -193,6 +193,14 @@ let self = {
         }
 
         return str+'s';
+    },
+
+    truncate(str, length) {
+        if (str.length > length) {
+            return str.slice(0, length) + '...';
+        }
+
+        return str;
     },
 }
 

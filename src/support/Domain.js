@@ -1,4 +1,5 @@
 import Router from './../Routing/Router';
+import Str from './Str';
 
 let self = {
     get() {
@@ -11,7 +12,7 @@ let self = {
 
         let url = '';
         for ( let i = 0; i < split.length; i++ ) {
-            url += `/${kebab(split[i])}`;
+            url += `/${Str.kebab(split[i])}`;
         }
 
         return url;
@@ -23,7 +24,7 @@ let self = {
 
         let name = '';
         for ( let i = 0; i < split.length; i++ ) {
-            name += to_words(split[i]) + ' ';
+            name += Str.ucwords(split[i]) + ' ';
         }
 
         name = name.split('').map((letter, idx) => {
@@ -35,7 +36,7 @@ let self = {
         .trim()
         .replace(/\s+/, ' ');
 
-        return is_plural ? plural(name) : name;
+        return is_plural ? Str.plural(name) : name;
     },
 
     url(create_update = false) {
@@ -48,7 +49,7 @@ let self = {
 
         let url = '';
         for ( let i = 0; i < split.length; i++ ) {
-            url += `/${kebab(split[i])}`;
+            url += `/${Str.kebab(split[i])}`;
         }
 
         if ( create_update ) {
@@ -60,11 +61,11 @@ let self = {
 
     action() {
         let split = Router.currentRoute.name.split('\\');
-        return kebab(split[split.length - 1].replace(/Action$/, ''));
+        return Str.kebab(split[split.length - 1].replace(/Action$/, ''));
     },
 
     actionName() {
-        return to_words(self.action());
+        return Str.ucwords(self.action());
     }
 }
 
