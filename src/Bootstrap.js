@@ -3,6 +3,7 @@ import Vue from 'vue';
 import './Components';
 import './Directives';
 import './Mixins';
+import './Modals';
 
 import Alert from './Alert';
 import Cookie from './Support/Cookie';
