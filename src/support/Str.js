@@ -1,3 +1,5 @@
+let pluralize = require('pluralize');
+
 let self = {
     /*helpers from https://github.com/validatorjs/validator.js*/
     ltrim(str, chars) {
@@ -186,13 +188,7 @@ let self = {
     },
 
     plural(str) {
-        str = self.ucwords(str);
-
-        if ( str.match(/y$/) ) {
-            return str.replace(/y$/, 'ies');
-        }
-
-        return str+'s';
+        return pluralize(str);
     },
 
     truncate(str, length) {
