@@ -49,12 +49,12 @@ let self = {
     },
 
     snake(string) {
-        string = string.replace(new RegExp(/\s+(?=\d)/g, 'u'), '')
-            .replace(new RegExp(/\s+/g, 'u'), '_')
-            .replace(new RegExp(/([^_\d])(?=[A-Z])/, 'ug'), `$1_`)
+        return string
+            .replace(/\s+(?=\d)/g, '')
+            .replace(/\s+/g, '_')
+            .replace(/([a-z])([A-Z])/g, '$1_$2')
+            .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
             .toLowerCase();
-
-        return string;
     },
 
     camel(str) {
