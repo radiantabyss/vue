@@ -23,6 +23,10 @@ let self = {
 
         return true;
     },
+
+    array_unique(arr) {
+        return [...new Set(arr)];
+    },
 }
 
 for ( let helper in self ) {
