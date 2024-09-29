@@ -131,10 +131,10 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             _button_html = _button.innerHTML;
 
             if ( payload._replace_html ) {
-                _button.innerHTML = '<svg class="svg-request-spinner"><use xlink:href="#request-spinner"></use></svg>';
+                _button.innerHTML = '<svg class="svg-request-spinner"><use xlink:href="/sprites.svg#request-spinner"></use></svg>';
             }
             else {
-                _button.innerHTML = _button_html + '&nbsp;<svg class="svg-request-spinner"><use xlink:href="#request-spinner"></use></svg>';
+                _button.innerHTML = _button_html + '&nbsp;<svg class="svg-request-spinner"><use xlink:href="/sprites.svg#request-spinner"></use></svg>';
             }
         }
 
