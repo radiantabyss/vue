@@ -1,18 +1,21 @@
 let Middleware = {};
-let context = require.context(`@/Http/Middleware/`, true, /\.js/);
-let files = context.keys();
+let context = import.meta.glob('/src/Http/Middleware/**/*.js');
 
-for ( let i = 0; i < files.length; i++ ) {
-    let split = files[i].split('/');
-    let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
+const loadModules = async () => {
+    const files = Object.keys(context);
 
-    Middleware[name] = context(files[i]).default;
+    for ( let i = 0; i < files.length; i++ ) {
+        let split = files[i].split('/');
+        let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
+        let module = await context[files[i]]();
+        Middleware[name] = module.default;
+    }
 }
 
-function runMiddleware(to, from, resolve, reject, i = 0) {
+let runMiddleware = async (to, from, i = 0) => {
     //reached end, then everything passed
     if ( i == to.meta.middleware.length ) {
-        return resolve();
+        return;
     }
 
     //middleware doesnt exist
@@ -21,24 +24,18 @@ function runMiddleware(to, from, resolve, reject, i = 0) {
     }
 
     //run middleware
-    Middleware[to.meta.middleware[i]](to, from)
-    .then(() => {
-        //resolved, go next
-        runMiddleware(to, from, resolve, reject, i + 1);
-    })
-    .catch((redirect = '/') => {
-        reject(redirect);
-    });
+    await Middleware[to.meta.middleware[i]](to, from);
+    await runMiddleware(to, from, i + 1);
 }
 
-export default {
-    run(to, from) {
-        return new Promise((resolve, reject) => {
-            if ( !to.meta || !to.meta.middleware ) {
-                return resolve();
-            }
+export default async () => {
+    await loadModules();
 
-            runMiddleware(to, from, resolve, reject);
-        });
-    }
+    return async (to, from) => {
+        if ( !to.meta || !to.meta.middleware ) {
+            return;
+        }
+
+        return runMiddleware(to, from);
+    };
 }

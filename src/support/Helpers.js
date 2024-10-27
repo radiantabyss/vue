@@ -32,3 +32,5 @@ let self = {
 for ( let helper in self ) {
     window[helper] = self[helper];
 }
+
+export default self;

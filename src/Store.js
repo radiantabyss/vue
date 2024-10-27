@@ -1,24 +1,28 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-Vue.use(Vuex);
+import { createStore } from 'vuex';
 
 const Modules = {};
-let context = require.context(`@/Store/`, true, /\.js/);
-let files = context.keys();
+let context = import.meta.glob('/src/Store/**/*.js');
 
-for ( let i = 0; i < files.length; i++ ) {
-    let split = files[i].split('/');
-    split.shift();
-    let name = split[split.length - 1].replace('.js', '');
-    split.pop();
+const loadModules = async () => {
+    const files = Object.keys(context);
 
-    setNamespace(Modules, name, split, context(files[i]).default);
+    for ( let i = 0; i < files.length; i++ ) {
+        let split = files[i].split('/');
+        split.shift();
+        split.shift();
+        split.shift();
+
+        let name = split[split.length - 1].replace('.js', '');
+        split.pop();
+
+        let module = await context[files[i]]();
+        setNamespace(Modules, name, split, module);
+    }
 }
 
-function setNamespace(Modules, name, namespace, context) {
+function setNamespace(Modules, name, namespace, module) {
     if ( !namespace.length ) {
-        Modules[name] = context;
+        Modules[name] = module.default;
         return;
     }
 
@@ -35,11 +39,16 @@ function setNamespace(Modules, name, namespace, context) {
         };
     }
 
-    setNamespace(Modules[first].modules, name, namespace, context);
+    setNamespace(Modules[first].modules, name, namespace, module);
 }
 
-let self = new Vuex.Store({
-    modules: Modules,
-});
+export default async (app) => {
+    await loadModules();
 
-export default self;
+    const Store = createStore({
+        modules: Modules,
+    });
+
+    window.Store = Store;
+    app.use(Store);
+};

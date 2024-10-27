@@ -1,9 +1,8 @@
-import Router from './../Routing/Router';
 import Str from './Str';
 
 let self = {
     get() {
-        let split = Router.currentRoute.name.split('\\');
+        let split = Router.currentRoute.value.name.split('\\');
         split.pop();
 
         if ( !split.length ) {
@@ -19,7 +18,7 @@ let self = {
     },
 
     name(is_plural = false) {
-        let split = Router.currentRoute.name.split('\\');
+        let split = Router.currentRoute.value.name.split('\\');
         split.pop();
 
         let name = '';
@@ -40,7 +39,7 @@ let self = {
     },
 
     url(create_update = false) {
-        let split = Router.currentRoute.name.split('\\');
+        let split = Router.currentRoute.value.name.split('\\');
         split.pop();
 
         if ( !split.length ) {
@@ -53,14 +52,14 @@ let self = {
         }
 
         if ( create_update ) {
-            return `${url}/${Router.currentRoute.name.match(/Edit/) ? 'update/' + Router.currentRoute.params.id : 'create'}`;
+            return `${url}/${Router.currentRoute.value.name.match(/Edit/) ? 'update/' + Router.currentRoute.value.params.id : 'create'}`;
         }
 
         return url;
     },
 
     action() {
-        let split = Router.currentRoute.name.split('\\');
+        let split = Router.currentRoute.value.name.split('\\');
         return Str.kebab(split[split.length - 1].replace(/Action$/, ''));
     },
 

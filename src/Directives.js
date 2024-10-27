@@ -1,18 +1,20 @@
-import Vue from 'vue';
 import Str from './Support/Str';
 
-//project-specific directives
-let context = require.context(`@/Directives/`, true, /\.js/);
-let files = context.keys();
+let context = import.meta.glob('/src/Directives/**/*.js');
 
-for ( let i = 0; i < files.length; i++ ) {
-    let split = files[i].split('/');
-    let name = split[split.length - 1].replace('.js', '')
-        .replace(/Directive$/, '')
-        .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
-        .toLowerCase();
+export default async (app) => {
+    const files = Object.keys(context);
 
-    name = Str.trim(name, '-');
+    for ( let i = 0; i < files.length; i++ ) {
+        let split = files[i].split('/');
+        let name = split[split.length - 1].replace('.js', '')
+            .replace(/Directive$/, '')
+            .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
+            .toLowerCase();
 
-    Vue.directive(name, context(files[i]).default);
+        name = Str.trim(name, '-');
+
+        let module = await context[files[i]]();
+        app.directive(name, module.default);
+    }
 }

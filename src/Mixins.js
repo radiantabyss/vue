@@ -1,13 +1,16 @@
 let Mixins = {};
-let context = require.context(`@/Mixins/`, true, /\.js/);
-let files = context.keys();
+let context = import.meta.glob('/src/Mixins/**/*.js');
 
-for ( let i = 0; i < files.length; i++ ) {
-    let split = files[i].split('/');
-    let name = split[split.length - 1].replace('.js', '')
-        .replace(/Mixin$/, '');
+export default async () => {
+    const files = Object.keys(context);
 
-    Mixins[name] = context(files[i]).default;
+    for ( let i = 0; i < files.length; i++ ) {
+        let split = files[i].split('/');
+        let name = split[split.length - 1].replace('.js', '')
+            .replace(/Mixin$/, '');
+
+        let module = await context[files[i]]();
+        Mixins[name] = module.default;
+    }
+    window.Mixins = Mixins;
 }
-
-window.Mixins = Mixins;

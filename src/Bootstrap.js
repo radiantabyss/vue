@@ -1,9 +1,7 @@
-import Vue from 'vue';
-
-import './Components';
-import './Directives';
-import './Mixins';
-import './Modals';
+import Components from './Components';
+import Directives from './Directives';
+import Mixins from './Mixins';
+import Modals from './Modals';
 
 import Alert from './Alert';
 import Cookie from './Support/Cookie';
@@ -14,34 +12,38 @@ import Helpers from './Support/Helpers';
 import Item from './Support/Item';
 import Items from './Support/Items';
 import Request from './Request';
+import ReactiveStorage from './Support/ReactiveStorage';
 import StorageHandler from './Support/StorageHandler';
 import Str from './Support/Str';
 
-let self = {
-    run() {
-        window.Alert = Alert;
-        window.Cookie = Cookie;
-        window.Confirm = Confirm;
-        window.Domain = Domain;
-        window.Gate = Gate;
-        window.Item = Item;
-        window.Items = Items;
-        window.Request = Request;
-        window.StorageHandler = StorageHandler;
-        window.Str = Str;
+import Store from './Store';
+import Router from './Routing/Router';
 
-        //make usable inside template
-        Vue.prototype.Item = Item;
-        Vue.prototype.Items = Items;
-        Vue.prototype.Domain = Domain;
-        Vue.prototype.Gate = Gate;
-        Vue.prototype.Str = Str;
+export default async (app) => {
+    await Components(app);
+    await Directives(app);
+    await Mixins(app);
+    await Modals(app);
 
-        //str helpers
-        for ( let key in Str ) {
-            Vue.filter(key, Str[key]);
-        }
-    }
-}
+    window.Alert = Alert;
+    window.Cookie = Cookie;
+    window.Confirm = Confirm;
+    window.Domain = Domain;
+    window.Gate = Gate;
+    window.Item = Item;
+    window.Items = Items;
+    window.Request = Request;
+    window.ReactiveStorage = ReactiveStorage;
+    window.StorageHandler = StorageHandler;
+    window.Str = Str;
 
-export default self;
+    //make usable inside template
+    app.config.globalProperties.Item = Item;
+    app.config.globalProperties.Items = Items;
+    app.config.globalProperties.Domain = Domain;
+    app.config.globalProperties.Gate = Gate;
+    app.config.globalProperties.Str = Str;
+
+    await Store(app);
+    window.Router = await Router(app);
+};

@@ -1,24 +1,30 @@
 let Actions = {};
-let context = require.context(`@/Domains/`, true, /\.vue/);
-let files = context.keys();
+let context = import.meta.glob('/src/Domains/**/*.vue');
 
-for ( let i = 0; i < files.length; i++ ) {
-    let split = files[i].split('/');
-    split.shift();
-    let name = split[split.length - 1].replace('.vue', '');
-    split.pop();
-    split.pop();
+const loadModules = async () => {
+    const files = Object.keys(context);
 
-    if ( !name.match(/Action$/) || name == 'Action' ) {
-        continue;
+    for ( let i = 0; i < files.length; i++ ) {
+        let split = files[i].split('/');
+        split.shift();
+        let name = split[split.length - 1].replace('.vue', '');
+        split.pop();
+        split.pop();
+        split.shift();
+        split.shift();
+
+        if ( !name.match(/Action$/) || name == 'Action' ) {
+            continue;
+        }
+
+        let module = await context[files[i]]();
+        setNamespace(Actions, name, split, module);
     }
-
-    setNamespace(Actions, name, split, context(files[i]).default);
 }
 
-function setNamespace(Actions, name, namespace, context) {
+function setNamespace(Actions, name, namespace, module) {
     if ( !namespace.length ) {
-        Actions[name] = context;
+        Actions[name] = module.default;
         return;
     }
 
@@ -32,7 +38,10 @@ function setNamespace(Actions, name, namespace, context) {
         Actions[first] = {};
     }
 
-    setNamespace(Actions[first], name, namespace, context);
+    setNamespace(Actions[first], name, namespace, module);
 }
 
-export default Actions;
+export default async () => {
+    await loadModules();
+    return Actions;
+}

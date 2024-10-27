@@ -58,15 +58,6 @@ let self = {
     deleteKey(item, key) {
 		return self.deleteKeys(item, [key]);
     },
-
-	mergeKeys(target, source) {
-	    for (const key in source) {
-	        if (source[key] instanceof Object && key in target) {
-	            Object.assign(source[key], self.mergeKeys(target[key], source[key]));
-	        }
-	    }
-	    return { ...target, ...source };
-	},
 };
 
 export default self;

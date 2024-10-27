@@ -1,17 +1,16 @@
-import axios from 'axios';
-import qs from 'qs';
+let sprite_version = import.meta.env.VITE_SPRITE_VERSION;
 
 const formatErrors = function(response) {
     let errors = [];
-    if ( response && response.data && response.data.errors ) {
-        for ( var i in response.data.errors ) {
-            if ( typeof response.data.errors[i] === 'object' ) {
-                for ( var j in response.data.errors[i] ) {
-                    errors.push(response.data.errors[i][j]);
+    if ( response && response.errors ) {
+        for ( let i in response.errors ) {
+            if ( typeof response.errors[i] === 'object' ) {
+                for (let j in response.errors[i]) {
+                    errors.push(response.errors[i][j]);
                 }
             }
             else {
-                errors.push(response.data.errors[i]);
+                errors.push(response.errors[i]);
             }
         }
     }
@@ -20,35 +19,19 @@ const formatErrors = function(response) {
     }
 
     return errors;
-}
+};
 
-axios.interceptors.request.use((request) => {
-    if (request.data ) {
-        if ( request.headers['Content-Type'] === 'application/x-www-form-urlencoded' ) {
-            request.data = qs.stringify(request.data);
-        }
-        else if ( request.headers['Content-Type'] === 'application/json' ) {
-            request.data = JSON.stringify(request.data);
-            request.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        }
-    }
-    return request;
-});
-
-let request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}, upload_progress = null) {
+const request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}, upload_progress = null) {
     return new Promise((resolve, reject) => {
-        //set default base url
         if ( !base_url ) {
-            base_url = process.env.VUE_APP_BACK_URL;
+            base_url = import.meta.env.VITE_BACK_URL;
         }
 
-        //set default auth token
         if ( !auth_token ) {
             auth_token = StorageHandler.getItem('jwt_token');
         }
 
-        //clear previous messages
-        if ( method == 'POST' ) {
+        if ( method === 'POST' ) {
             Alert.hide();
         }
 
@@ -58,145 +41,117 @@ let request = function(method, edge, payload = {}, display_errors = false, base_
             };
         }
 
-        //target button
         let _button;
-        if ( typeof payload._button !== 'undefined' ) {
+        if ( payload._button !== undefined ) {
             _button = payload._button;
             delete payload._button;
         }
 
-        //event
         let _event;
-        if ( typeof payload._event !== 'undefined' ) {
+        if ( payload._event !== undefined ) {
             _event = payload._event;
             _event.preventDefault();
 
-            if ( typeof _button === 'undefined' ) {
+            if ( _button === undefined ) {
                 _button = _event.target;
             }
 
             delete payload._event;
         }
 
-        //check if button is disabled
-        if ( typeof _button !== 'undefined' ) {
+        if ( _button !== undefined ) {
             if ( _button.disabled ) {
                 return;
             }
-
             _button.disabled = true;
         }
 
         let data;
-
-        //build url
         let url = base_url + edge;
 
-        if ( method == 'GET' ) {
-            url += '?' + qs.stringify(payload);
+        if ( method === 'GET' ) {
+            url += '?' + new URLSearchParams(payload).toString();
         }
-        else if ( method == 'POST' ) {
-            if ( headers['Content-Type'] == 'multipart/form-data' ) {
-                data = new FormData()
-                for ( let key in payload ) {
+        else if ( method === 'POST' ) {
+            if ( headers['Content-Type'] === 'multipart/form-data' ) {
+                data = new FormData();
+                for (let key in payload) {
                     data.append(key, payload[key]);
                 }
+                delete headers['Content-Type'];
+            }
+            else if ( headers['Content-Type'] === 'application/x-www-form-urlencoded' ) {
+                data = new URLSearchParams(payload).toString();
             }
             else {
-                data = {...payload};
+                data = JSON.stringify(payload);
+                headers['Content-Type'] = 'application/x-www-form-urlencoded';
             }
         }
 
-        //set auth token
         if ( auth_token ) {
             if ( typeof auth_token !== 'object' ) {
-                auth_token = {
-                    jwt_token: auth_token,
-                };
+                auth_token = { jwt_token: auth_token };
             }
-
             for ( let key in auth_token ) {
-                if ( auth_token[key] == '' || auth_token[key] === null ) {
-                    continue;
+                if ( auth_token[key] !== '' && auth_token[key] !== null ) {
+                    url += url.includes('?') ? '&' : '?';
+                    url += `${key}=${auth_token[key]}`;
                 }
-
-                url += url.match(/\?/) ? '&' : '?';
-                url += `${key}=${auth_token[key]}`;
             }
         }
 
-        //set loading spinner
         let _button_html;
         if ( typeof _button !== 'undefined' ) {
             _button_html = _button.innerHTML;
 
             if ( payload._replace_html ) {
-                _button.innerHTML = '<svg class="svg-request-spinner"><use xlink:href="/sprites.svg#request-spinner"></use></svg>';
+                _button.innerHTML = `<svg class="svg-request-spinner"><use xlink:href="/sprites.svg?v=${sprite_version}#request-spinner"></use></svg>`;
             }
             else {
-                _button.innerHTML = _button_html + '&nbsp;<svg class="svg-request-spinner"><use xlink:href="/sprites.svg#request-spinner"></use></svg>';
+                _button.innerHTML += `&nbsp;<svg class="svg-request-spinner"><use xlink:href="/sprites.svg?v=${sprite_version}#request-spinner"></use></svg>`;
             }
         }
 
-        axios({
-            headers,
+        fetch(url, {
             method,
-            url,
-            data,
-            onUploadProgress: (e) => {
-                if ( !upload_progress ) {
-                    return;
-                }
-
-                upload_progress(Math.round((e.loaded * 100) / e.total));
-            },
+            headers,
+            body: method === 'GET' ? undefined : data,
         })
-        .then((request_response) => {
-            //enable event target
-            if ( typeof _button !== 'undefined' ) {
+        .then(async (response) => {
+            if ( _button !== undefined ) {
                 _button.disabled = false;
                 _button.innerHTML = _button_html;
             }
 
-            let response = request_response.data;
-
-            if ( response.success ) {
-                resolve(response.data);
+            const response_data = await response.json();
+            if ( response.ok && response_data.success ) {
+                return resolve(response_data.data);
             }
-            else {
-                let errors = formatErrors(response);
 
-                if ( display_errors ) {
-                    Alert.error(errors.join('<br/>'), 7000);
-                }
-
-                reject(response.data.errors);
+            const errors = formatErrors(response_data);
+            if ( display_errors ) {
+                Alert.error(errors.join('<br/>'), 7000);
             }
+
+            reject(errors);
         })
         .catch((error) => {
-            let errors;
-
-            if ( error instanceof TypeError ) {
-                errors = [error];
-            }
-            else {
-                errors = formatErrors(error.response);
-            }
+            let errors = [error.message];
 
             if ( display_errors ) {
                 Alert.error(errors.join('<br/>'), 7000);
             }
 
-            //enable event target
-            if ( typeof _button !== 'undefined' ) {
+            if ( _button !== undefined ) {
                 _button.disabled = false;
                 _button.innerHTML = _button_html;
             }
 
-            reject(error.response.data.errors, error.response.status);
+            reject(errors);
         });
     });
-}
+};
 
 let self = {
     get(edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}) {
