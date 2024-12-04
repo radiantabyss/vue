@@ -1,5 +1,4 @@
 import { reactive } from 'vue';
-import StorageHandler from './StorageHandler';
 
 const self = {
     state: reactive({
@@ -7,13 +6,13 @@ const self = {
     }),
 
     setItem(key, value) {
-        StorageHandler.setItem(key, value);
+        localStorage.setItem(key, value);
         self.state.data[key] = value;
     },
 
     getItem(key) {
         if (!self.state.data[key]) {
-            const value = StorageHandler.getItem(key);
+            const value = localStorage.getItem(key);
             if (value) {
                 self.state.data[key] = value;
             }
@@ -23,7 +22,7 @@ const self = {
     },
 
     removeItem(key) {
-        StorageHandler.removeItem(key);
+        localStorage.removeItem(key);
         delete self.state.data[key];
     }
 };

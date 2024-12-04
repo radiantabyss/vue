@@ -60,7 +60,7 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
         }
 
         if ( !auth_token ) {
-            auth_token = StorageHandler.getItem('jwt_token');
+            auth_token = localStorage.getItem('jwt_token');
         }
 
         if ( method === 'POST' ) {
@@ -163,7 +163,7 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             if ( edge.match(/\.json/) ) {
                 return resolve(response_data);
             }
-			
+
             if ( response.ok && response_data.success ) {
                 return resolve(response_data.data);
             }

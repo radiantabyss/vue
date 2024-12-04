@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Middleware from './Middleware';
 import Actions from './Actions';
-import StorageHandler from './../Support/StorageHandler';
 import Str from './../Support/Str';
 
 //load routes
@@ -83,7 +82,7 @@ function getAction(actions, name, namespace, action_name) {
     return getAction(actions[first], name, namespace, action_name);
 }
 
-export default async (app) => {
+export default async () => {
     let runMiddleware = await Middleware();
 
     await loadModules();
@@ -123,10 +122,8 @@ export default async (app) => {
 
     //save previous route
     Router.afterEach((to, from) => {
-        StorageHandler.setItem('_previous_route', from.fullPath != '/' ? from.fullPath : '');
+        localStorage.setItem('_previous_route', from.fullPath != '/' ? from.fullPath : '');
     });
 
-    app.use(Router);
-
-    return Router;
+    return { Router, Routes };
 };

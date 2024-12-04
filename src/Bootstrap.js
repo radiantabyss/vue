@@ -13,7 +13,6 @@ import Item from './Support/Item';
 import Items from './Support/Items';
 import Request from './Request';
 import ReactiveStorage from './Support/ReactiveStorage';
-import StorageHandler from './Support/StorageHandler';
 import Str from './Support/Str';
 
 import Store from './Store';
@@ -34,7 +33,6 @@ export default async (app) => {
     window.Items = Items;
     window.Request = Request;
     window.ReactiveStorage = ReactiveStorage;
-    window.StorageHandler = StorageHandler;
     window.Str = Str;
 
     //make usable inside template
