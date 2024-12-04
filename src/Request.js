@@ -21,6 +21,38 @@ const formatErrors = function(response) {
     return errors;
 };
 
+const serializeToURLEncoded = (obj, prefix) => {
+    const str = [];
+    for ( let p in obj ) {
+        if ( obj.hasOwnProperty(p) ) {
+            const key = prefix ? `${prefix}[${p}]` : p;
+            const value = obj[p];
+
+            if ( typeof value === "object" ) {
+                str.push(serializeToURLEncoded(value, key));
+            }
+            else {
+                str.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+            }
+        }
+    }
+    return str.join("&");
+};
+
+const appendFormData = (formData, key, value) => {
+    if ( Array.isArray(value) ) {
+        value.forEach((v) => formData.append(`${key}[]`, v));
+    }
+    else if ( typeof value === 'object' && value !== null ) {
+        for ( let subKey in value ) {
+            appendFormData(formData, `${key}[${subKey}]`, value[subKey]);
+        }
+    }
+    else {
+        formData.append(key, value);
+    }
+};
+
 const request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}, upload_progress = null) {
     return new Promise((resolve, reject) => {
         if ( !base_url ) {
@@ -75,13 +107,15 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
         else if ( method === 'POST' ) {
             if ( headers['Content-Type'] === 'multipart/form-data' ) {
                 data = new FormData();
+
                 for (let key in payload) {
-                    data.append(key, payload[key]);
+                    appendFormData(data, key, payload[key]);
                 }
+
                 delete headers['Content-Type'];
             }
             else if ( headers['Content-Type'] === 'application/x-www-form-urlencoded' ) {
-                data = new URLSearchParams(payload).toString();
+                data = serializeToURLEncoded(payload).replace(/\&+$/, '');
             }
             else {
                 data = JSON.stringify(payload);
@@ -125,6 +159,11 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             }
 
             const response_data = await response.json();
+
+            if ( edge.match(/\.json/) ) {
+                return resolve(response_data);
+            }
+			
             if ( response.ok && response_data.success ) {
                 return resolve(response_data.data);
             }
