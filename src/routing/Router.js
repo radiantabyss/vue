@@ -47,8 +47,12 @@ const loadModules = async () => {
 
                 let component = getAction(actions, name, namespace, action_name);
 
-                Routes.push({
-                    package: route.package ? route.package : '',
+                let file = files[i].replace('/src/Routes/', '').replace(/\.js$/, '');
+                if ( !Routes[file] ) {
+                    Routes[file] = [];
+                }
+
+                Routes[file].push({
                     name: action_name,
                     component: component,
                     path: route.path.replace(/\{([\s\S]+?)\}/g, ':$1'),
