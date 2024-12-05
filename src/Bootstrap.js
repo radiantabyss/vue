@@ -16,7 +16,6 @@ import ReactiveStorage from './Support/ReactiveStorage';
 import Str from './Support/Str';
 
 import Store from './Store';
-import Router from './Routing/Router';
 
 export default async (app) => {
     await Components(app);
@@ -43,5 +42,4 @@ export default async (app) => {
     app.config.globalProperties.Str = Str;
 
     await Store(app);
-    window.Router = await Router(app);
 };
