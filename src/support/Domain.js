@@ -2,7 +2,7 @@ import Str from './Str';
 
 let self = {
     get() {
-        let split = Router.currentRoute.value.name.split('\\');
+        let split = Router.currentRoute.value.name.split('/');
         split.pop();
 
         if ( !split.length ) {
@@ -18,7 +18,7 @@ let self = {
     },
 
     name(is_plural = false) {
-        let split = Router.currentRoute.value.name.split('\\');
+        let split = Router.currentRoute.value.name.split('/');
         split.pop();
 
         let name = '';
@@ -39,7 +39,7 @@ let self = {
     },
 
     url(create_update = false) {
-        let split = Router.currentRoute.value.name.split('\\');
+        let split = Router.currentRoute.value.name.split('/');
         split.pop();
 
         if ( !split.length ) {
@@ -59,7 +59,7 @@ let self = {
     },
 
     action() {
-        let split = Router.currentRoute.value.name.split('\\');
+        let split = Router.currentRoute.value.name.split('/');
         return Str.kebab(split[split.length - 1].replace(/Action$/, ''));
     },
 
