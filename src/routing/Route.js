@@ -16,7 +16,7 @@ function addRoute(path, action, middleware, name, throw_error) {
     let domain = namespace.length ? Str.slug(namespace[0]) : '';
 
     if ( namespace.length ) {
-        action_name = namespace.join('\\') + '\\' + action_name;
+        action_name = namespace.join('/') + '/' + action_name;
     }
 
     let component;

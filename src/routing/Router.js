@@ -67,9 +67,16 @@ export default async () => {
         }
     });
 
-    //save previous route
     Router.afterEach((to, from) => {
+        //save previous route
         localStorage.setItem('_previous_route', from.fullPath != '/' ? from.fullPath : '');
+
+        //change document title
+        let title = to.name.replace(/\//g, ' / ').replace(/Action$/, '');
+        if ( to.meta.settings.title ) {
+            title = to.meta.settings.title;
+        }
+        document.title = `${title} :: ${import.meta.env.VITE_NAME}`;
     });
 
     return { Router, RouteGroups };
