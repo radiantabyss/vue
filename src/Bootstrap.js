@@ -6,7 +6,6 @@ import Modals from './Modals';
 import Alert from './Alert';
 import Cookie from './Support/Cookie';
 import Confirm from './Confirm';
-import Domain from './Support/Domain';
 import Gate from './Support/Gate';
 import Helpers from './Support/Helpers';
 import Item from './Support/Item';
@@ -26,7 +25,6 @@ export default async (app) => {
     window.Alert = Alert;
     window.Cookie = Cookie;
     window.Confirm = Confirm;
-    window.Domain = Domain;
     window.Gate = Gate;
     window.Item = Item;
     window.Items = Items;
@@ -37,7 +35,6 @@ export default async (app) => {
     //make usable inside template
     app.config.globalProperties.Item = Item;
     app.config.globalProperties.Items = Items;
-    app.config.globalProperties.Domain = Domain;
     app.config.globalProperties.Gate = Gate;
     app.config.globalProperties.Str = Str;
 
