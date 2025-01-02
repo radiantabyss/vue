@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Str from './../Support/Str';
 import Actions from './Actions';
 import Middleware from './Middleware';
-import RouteGroups from './RouteGroups';
+import RouteFiles from './RouteFiles';
 import Route from './Route';
 import RouteCrud from './RouteCrud';
 
-window.RouteGroups = RouteGroups;
+window.RouteFiles = RouteFiles;
 window.Route = Route;
 window.RouteCrud = RouteCrud;
 
@@ -21,8 +21,8 @@ const loadModules = async () => {
         let file = files[i].replace('/src/Routes/', '').replace(/\.js$/, '');
         window.__lumi_vue_route_file = file;
 
-        if ( !RouteGroups[__lumi_vue_route_file] ) {
-            RouteGroups[__lumi_vue_route_file] = [];
+        if ( !RouteFiles[__lumi_vue_route_file] ) {
+            RouteFiles[__lumi_vue_route_file] = [];
         }
 
         await context[files[i]]();
@@ -79,5 +79,5 @@ export default async () => {
         document.title = `${title} :: ${import.meta.env.VITE_NAME}`;
     });
 
-    return { Router, RouteGroups };
+    return { Router, RouteFiles };
 };

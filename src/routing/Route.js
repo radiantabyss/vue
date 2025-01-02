@@ -30,7 +30,7 @@ function addRoute(path, action, middleware, name, throw_error) {
         return;
     }
 
-    RouteGroups[__lumi_vue_route_file].push({
+    RouteFiles[__lumi_vue_route_file].push({
         name: action_name,
         component,
         path,
