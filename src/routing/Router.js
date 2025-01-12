@@ -19,10 +19,10 @@ const loadModules = async () => {
 
     for ( let i = 0; i < files.length; i++ ) {
         let file = files[i].replace('/src/Routes/', '').replace(/\.js$/, '');
-        window.__lumi_vue_route_file = file;
+        window.__route_file = file;
 
-        if ( !RouteFiles[__lumi_vue_route_file] ) {
-            RouteFiles[__lumi_vue_route_file] = [];
+        if ( !RouteFiles[__route_file] ) {
+            RouteFiles[__route_file] = [];
         }
 
         await context[files[i]]();

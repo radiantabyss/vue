@@ -1,6 +1,6 @@
 import Str from './Support/Str';
 
-let context_lumi = import.meta.glob('@lumi-components/Components/**/*.vue');
+let context_ra = import.meta.glob('@ra-components/Components/**/*.vue');
 let context = import.meta.glob('@/Components/**/*.vue');
 
 function getComponentName(file) {
@@ -26,8 +26,8 @@ export default async (app) => {
         app.component(component, module.default);
     }
 
-    //load lumi components
-    files = Object.keys(context_lumi);
+    //load ra vue components
+    files = Object.keys(context_ra);
 
     for ( let i = 0; i < files.length; i++ ) {
         let component = getComponentName(files[i]);
@@ -37,7 +37,7 @@ export default async (app) => {
             continue;
         }
 
-        let module = await context_lumi[files[i]]();
+        let module = await context_ra[files[i]]();
         components.push(component);
         app.component(component, module.default);
     }
