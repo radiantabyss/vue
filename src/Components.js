@@ -1,6 +1,6 @@
 import Str from './Support/Str';
 
-let context_ra = import.meta.glob('@ra-components/Components/**/*.vue');
+let context_ra = import.meta.glob('@radiantabyss/vue-components/src/Components/**/*.vue');
 let context = import.meta.glob('@/Components/**/*.vue');
 
 function getComponentName(file) {
