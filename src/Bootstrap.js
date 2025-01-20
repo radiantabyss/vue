@@ -8,6 +8,7 @@ import Cookie from './Support/Cookie';
 import Confirm from './Confirm';
 import Gate from './Support/Gate';
 import Helpers from './Support/Helpers';
+import Invoke from './Invoke';
 import Item from './Support/Item';
 import Items from './Support/Items';
 import Request from './Request';
@@ -26,6 +27,7 @@ export default async (app) => {
     window.Cookie = Cookie;
     window.Confirm = Confirm;
     window.Gate = Gate;
+    window.Invoke = Invoke;
     window.Item = Item;
     window.Items = Items;
     window.Request = Request;

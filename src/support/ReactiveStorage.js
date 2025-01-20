@@ -6,14 +6,14 @@ const self = {
     }),
 
     setItem(key, value) {
-        localStorage.setItem(key, value);
+        localStorage.setItem(key, JSON.stringify(value));
         self.state.data[key] = value;
     },
 
     getItem(key) {
         if (!self.state.data[key]) {
-            const value = localStorage.getItem(key);
-            if (value) {
+            const value = JSON.parse(localStorage.getItem(key));
+            if ( value ) {
                 self.state.data[key] = value;
             }
         }
