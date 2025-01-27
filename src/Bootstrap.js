@@ -18,6 +18,12 @@ import Str from './Support/Str';
 import Store from './Store';
 
 export default async (app) => {
+    //helpers
+    for ( let key in Helpers ) {
+        window[key] = Helpers[key];
+        app.config.globalProperties[key] = Helpers[key];
+    }
+
     await Components(app);
     await Directives(app);
     await Mixins(app);
