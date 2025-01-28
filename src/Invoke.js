@@ -1,6 +1,6 @@
 let sprite_version = import.meta.env.VITE_SPRITE_VERSION;
 
-export default async function(edge, payload = {}, display_errors = false) {
+const invoke = async function(method, edge, payload = {}, display_errors = false) {
     let _button;
     if ( payload._button !== undefined ) {
         _button = payload._button;
@@ -39,7 +39,12 @@ export default async function(edge, payload = {}, display_errors = false) {
     }
 
     try {
-        let data = await electron.IPC.invoke(edge, payload);
+        delete payload._event;
+        let data = await electron.IPC.invoke('invoke', {
+            method,
+            path: edge,
+            payload: JSON.stringify(payload),
+        });
 
         if ( _button !== undefined ) {
             _button.disabled = false;
@@ -49,8 +54,10 @@ export default async function(edge, payload = {}, display_errors = false) {
         return data;
     }
     catch(e) {
+        e = e.toString().replace('Error: Error invoking remote method \'invoke\': ', '');
+
         if ( display_errors ) {
-            Alert.error(e.toString(), 7000);
+            Alert.error(Str.nl2br(e), 7000);
         }
 
         if ( _button !== undefined ) {
@@ -61,3 +68,15 @@ export default async function(edge, payload = {}, display_errors = false) {
         throw e;
     }
 }
+
+let self = {
+    get(edge, payload = {}, display_errors = false) {
+        return invoke('GET', edge, payload, display_errors);
+    },
+
+    post(edge, payload = {}, display_errors = true) {
+        return invoke('POST', edge, payload, display_errors);
+    },
+};
+
+export default self;
