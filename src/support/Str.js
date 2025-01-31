@@ -204,6 +204,137 @@ let self = {
 
         return str;
     },
+    
+    string_to_date(str) {
+        let match;
+        let months_short = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+        //trim spaces
+        str = str.trim();
+
+        //dash format: 23-10-2024
+        match = str.match(/(\d{2})-(\d{2})-(\d{4})/);
+        if ( match && match.length == 4 ) {
+            return new Date(`${match[3]}-${match[2]}-${match[1]}`);
+        }
+
+        //dot format: 23.10.2024
+        match = str.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+        if ( match && match.length == 4 ) {
+            return new Date(`${match[3]}-${match[2]}-${match[1]}`);
+        }
+
+        //pretty format: 23 Oct
+        match = str.match(/(\d{2}) (\w{3})/i);
+        if ( match && match.length == 3 ) {
+            let date = new Date();
+            let month = months_short.indexOf(match[2].toLowerCase()) + 1;
+            return new Date(`${date.getFullYear()}-${self.leading_zero(month)}-${match[1]}`);
+        }
+
+        //pretty format with year: 23 Oct 2024
+        match = str.match(/(\d{2}) (\w{3}) (\d{4})/i);
+        if ( match && match.length == 4 ) {
+            let month = months_short.indexOf(months_short[match[2].toLowerCase()]) + 1;
+            return new Date(`${match[3]}-${self.leading_zero(month)}-${match[1]}`);
+        }
+
+        //today
+        if ( str.match(/^today$/i) ) {
+            return new Date();
+        }
+
+        //yesterday
+        if ( str.match(/^yesterday$/i) ) {
+            let date = new Date();
+            return date.setDate(date.getDate() - 1);
+        }
+
+        return new Date(str);
+    },
+
+    prettify_date(date) {
+        if ( !date ) {
+            return 'Never';
+        }
+
+        let mysql_date = date;
+        if ( typeof date == 'string' ) {
+            date = new Date(date);
+        }
+        else {
+            mysql_date = self.mysql_date(date);
+        }
+
+        if ( isNaN(date) ) {
+            return 'Invalid Date';
+        }
+
+        //check if is today
+        let today = new Date();
+        if ( self.mysql_date(today) == mysql_date ) {
+            return 'Today';
+        }
+
+        //check if is yesterday
+        today.setDate(-1);
+        if ( self.mysql_date(today) == mysql_date ) {
+            return 'Yesterday';
+        }
+
+        //check if is current year then don't display it
+        if ( new Date(date).getFullYear() == today.getFullYear() ) {
+            return `${self.leading_zero(date.getDate())} ${date.toLocaleString('default', { month: 'short' })}`;
+        }
+
+        return `${self.leading_zero(date.getDate())} ${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
+    },
+
+    prettify_datetime(date) {
+        const options = {};
+        const parsed_date = new Date(new Date(date + 'Z').toLocaleString('en-US', options)); // Add 'Z' for UTC handling
+        const now = new Date();
+
+        if (parsed_date.getFullYear() === now.getFullYear()) {
+            return parsed_date.toLocaleDateString('en-US', {
+                day: '2-digit',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+            }).replace(',', ' @');
+        }
+
+        return parsed_date.toLocaleDateString('en-US', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        }).replace(',', ' @');
+    },
+
+    prettify_time(date) {
+        const options = {};
+        const parsed_date = new Date(new Date(date + 'Z').toLocaleString('en-US', options)); // Add 'Z' for UTC handling
+
+        return parsed_date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
+    },
+
+    mysql_date(date = null) {
+        if ( !date ) {
+            date = new Date();
+        }
+
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        return `${date.getFullYear()}-${self.leading_zero(month)}-${self.leading_zero(day)}`;
+    },
 }
 
 export default self;
