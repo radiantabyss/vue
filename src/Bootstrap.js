@@ -11,6 +11,7 @@ import Helpers from './Support/Helpers';
 import Invoke from './Invoke';
 import Item from './Support/Item';
 import Items from './Support/Items';
+import Modal from './Modal';
 import Request from './Request';
 import ReactiveStorage from './Support/ReactiveStorage';
 import Str from './Support/Str';
@@ -36,6 +37,7 @@ export default async (app) => {
     window.Invoke = Invoke;
     window.Item = Item;
     window.Items = Items;
+    window.Modal = Modal;
     window.Request = Request;
     window.ReactiveStorage = ReactiveStorage;
     window.Str = Str;
@@ -44,6 +46,7 @@ export default async (app) => {
     app.config.globalProperties.Item = Item;
     app.config.globalProperties.Items = Items;
     app.config.globalProperties.Gate = Gate;
+    app.config.globalProperties.Modal = Modal;
     app.config.globalProperties.Str = Str;
 
     await Store(app);
