@@ -1,5 +1,5 @@
 let Actions = {};
-let context = import.meta.glob('/src/Domains/**/*.vue');
+let context = import.meta.glob('/app/Domains/**/*.vue');
 
 const loadModules = async () => {
     const files = Object.keys(context);

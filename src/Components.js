@@ -14,7 +14,7 @@ function getComponentName(file) {
 }
 
 export default async (app) => {
-    //load src components
+    //load app components
     let files = Object.keys(context);
     let components = [];
 
@@ -32,7 +32,7 @@ export default async (app) => {
     for ( let i = 0; i < files.length; i++ ) {
         let component = getComponentName(files[i]);
 
-        //enable component overloading. if component is already defined in src, continue
+        //enable component overloading. if component is already defined in app, continue
         if ( components.includes(component) ) {
             continue;
         }

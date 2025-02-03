@@ -11,14 +11,14 @@ window.Route = Route;
 window.RouteCrud = RouteCrud;
 
 //load route files
-let context = import.meta.glob('/src/Routes/**/*.js');
+let context = import.meta.glob('/app/Routes/**/*.js');
 
 const loadModules = async () => {
     window.Actions = await Actions();
     const files = Object.keys(context);
 
     for ( let i = 0; i < files.length; i++ ) {
-        let file = files[i].replace('/src/Routes/', '').replace(/\.js$/, '');
+        let file = files[i].replace('/app/Routes/', '').replace(/\.js$/, '');
         window.__route_file = file;
 
         if ( !RouteFiles[__route_file] ) {

@@ -1,5 +1,5 @@
 let Mixins = {};
-let context = import.meta.glob('/src/Mixins/**/*.js');
+let context = import.meta.glob('/app/Mixins/**/*.js');
 
 export default async () => {
     const files = Object.keys(context);

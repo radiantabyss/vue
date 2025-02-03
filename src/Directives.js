@@ -1,6 +1,6 @@
 import Str from './Support/Str';
 
-let context = import.meta.glob('/src/Directives/**/*.js');
+let context = import.meta.glob('/app/Directives/**/*.js');
 
 export default async (app) => {
     const files = Object.keys(context);

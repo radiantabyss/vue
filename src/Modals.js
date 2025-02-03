@@ -1,6 +1,6 @@
 import Str from './Support/Str';
 
-let context = import.meta.glob('/src/Modals/**/*.vue');
+let context = import.meta.glob('/app/Modals/**/*.vue');
 
 export default async (app) => {
     const files = Object.keys(context);

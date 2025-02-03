@@ -1,5 +1,5 @@
 let Middleware = {};
-let context = import.meta.glob('/src/Http/Middleware/**/*.js');
+let context = import.meta.glob('/app/Http/Middleware/**/*.js');
 
 const loadModules = async () => {
     const files = Object.keys(context);

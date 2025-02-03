@@ -1,7 +1,7 @@
 import { createStore } from 'vuex';
 
 const Modules = {};
-let context = import.meta.glob('/src/Store/**/*.js');
+let context = import.meta.glob('/app/Store/**/*.js');
 
 const loadModules = async () => {
     const files = Object.keys(context);
