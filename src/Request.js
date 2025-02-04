@@ -40,7 +40,10 @@ const serializeToURLEncoded = (obj, prefix) => {
 };
 
 const appendFormData = (formData, key, value) => {
-    if ( Array.isArray(value) ) {
+    if ( value instanceof Blob ) {
+        formData.append(key, value);
+    }
+    else if ( Array.isArray(value) ) {
         value.forEach((v) => formData.append(`${key}[]`, v));
     }
     else if ( typeof value === 'object' && value !== null ) {
