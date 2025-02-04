@@ -1,3 +1,4 @@
+import { nextTick, watch } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import Str from './../Support/Str';
 import Actions from './Actions';
@@ -74,9 +75,29 @@ export default async () => {
         //change document title
         let title = to.name.replace(/\//g, ' / ').replace(/Action$/, '');
         if ( to.meta.settings.title ) {
-            title = typeof to.meta.settings.title == 'function' ? to.meta.settings.title() : to.meta.settings.title;
+            if ( typeof to.meta.settings.title == 'function' ) {
+                nextTick(async () => {
+                    let instance = to.matched[to.matched.length - 1]?.instances?.default;
+                    if ( !instance ) {
+                        return;
+                    }
+
+                    watch(
+                        () => ({ ...instance.$data }),
+                        async () => {
+                            document.title = await to.meta.settings.title.call(instance);
+                        },
+                        { deep: true }
+                    );
+                });
+            }
+            else {
+                document.title = to.meta.settings.title;
+            }
         }
-        document.title = `${title} :: ${import.meta.env.VITE_NAME}`;
+        else {
+            document.title = `${title} :: ${import.meta.env.VITE_NAME}`;
+        }
     });
 
     return { Router, RouteFiles };
