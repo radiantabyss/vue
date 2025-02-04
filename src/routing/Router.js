@@ -74,7 +74,7 @@ export default async () => {
         //change document title
         let title = to.name.replace(/\//g, ' / ').replace(/Action$/, '');
         if ( to.meta.settings.title ) {
-            title = to.meta.settings.title;
+            title = typeof to.meta.settings.title == 'function' ? to.meta.settings.title() : to.meta.settings.title;
         }
         document.title = `${title} :: ${import.meta.env.VITE_NAME}`;
     });
