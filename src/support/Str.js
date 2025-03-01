@@ -204,7 +204,7 @@ let self = {
 
         return str;
     },
-    
+
     string_to_date(str) {
         let match;
         let months_short = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
@@ -275,15 +275,15 @@ let self = {
         if ( self.mysql_date(today) == mysql_date ) {
             return 'Today';
         }
-
+        
         //check if is yesterday
-        today.setDate(-1);
+        today.setDate(today.getDate() - 1);
         if ( self.mysql_date(today) == mysql_date ) {
             return 'Yesterday';
         }
 
         //check if is current year then don't display it
-        if ( new Date(date).getFullYear() == today.getFullYear() ) {
+        if ( new Date(date).getFullYear() == new Date().getFullYear() ) {
             return `${self.leading_zero(date.getDate())} ${date.toLocaleString('default', { month: 'short' })}`;
         }
 
