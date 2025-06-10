@@ -253,7 +253,7 @@ let self = {
         return new Date(str);
     },
 
-    prettify_date(date) {
+    pretty_date(date) {
         if ( !date ) {
             return 'Never';
         }
@@ -275,7 +275,7 @@ let self = {
         if ( self.mysql_date(today) == mysql_date ) {
             return 'Today';
         }
-        
+
         //check if is yesterday
         today.setDate(today.getDate() - 1);
         if ( self.mysql_date(today) == mysql_date ) {
@@ -290,7 +290,7 @@ let self = {
         return `${self.leading_zero(date.getDate())} ${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
     },
 
-    prettify_datetime(date) {
+    pretty_datetime(date) {
         const options = {};
         const parsed_date = new Date(new Date(date + 'Z').toLocaleString('en-US', options)); // Add 'Z' for UTC handling
         const now = new Date();
