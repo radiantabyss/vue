@@ -40,7 +40,7 @@ const invoke = async function(method, edge, payload = {}, display_errors = false
 
     try {
         delete payload._event;
-        let data = await electron.IPC.invoke('invoke', {
+        let data = await IPC.invoke('invoke', {
             method,
             path: edge,
             payload: JSON.stringify(payload),
