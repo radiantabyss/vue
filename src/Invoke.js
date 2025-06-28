@@ -1,3 +1,5 @@
+import Str from './Support/Str';
+
 let sprite_version = import.meta.env.VITE_SPRITE_VERSION;
 
 const invoke = async function(method, edge, payload = {}, display_errors = false) {
@@ -54,7 +56,12 @@ const invoke = async function(method, edge, payload = {}, display_errors = false
         return data;
     }
     catch(e) {
-        e = e.toString().replace('Error: Error invoking remote method \'invoke\': ', '');
+        if ( typeof e  == 'object' ) {
+            e = e.message;
+        }
+        else {
+            e = e.toString().replace('Error: Error invoking remote method \'invoke\': ', '');
+        }
 
         if ( display_errors ) {
             Alert.error(Str.nl2br(e), 7000);
