@@ -1,4 +1,6 @@
 let sprite_version = import.meta.env.VITE_SPRITE_VERSION;
+let get_params_format = import.meta.env.VITE_GET_PARAMS_FORMAT || 'php';
+let current = {};
 
 const formatErrors = function(response) {
     let errors = [];
@@ -56,6 +58,36 @@ const appendFormData = (formData, key, value) => {
     }
 };
 
+const buildParams = (obj, prefix = '', params = new URLSearchParams()) => {
+    Object.entries(obj).forEach(([key, value]) => {
+        const full_key = prefix ? `${prefix}[${key}]` : key;
+
+        if ( Array.isArray(value) ) {
+            if ( value.length ) {
+                value.forEach((v, i) => {
+                    if (typeof v === 'object') {
+                        buildParams(v, `${full_key}[${i}]`, params);
+                    }
+                    else {
+                        params.append(`${full_key}[]`, v);
+                    }
+                });
+            }
+            else {
+                params.append(full_key, value);
+            }
+        }
+        else if ( typeof value === 'object' && value !== null ) {
+            buildParams(value, full_key, params);
+        }
+        else {
+            params.append(full_key, value);
+        }
+    });
+
+    return params;
+}
+
 const request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}, upload_progress = null) {
     return new Promise((resolve, reject) => {
         if ( !base_url ) {
@@ -66,7 +98,7 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             auth_token = localStorage.getItem('jwt_token');
         }
 
-        if ( method === 'POST' ) {
+        if ( method == 'POST' ) {
             Alert.hide();
         }
 
@@ -101,23 +133,43 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             _button.disabled = true;
         }
 
+        let _cancel;
+        if ( payload._cancel !== undefined ) {
+            _cancel = new AbortController();
+            delete payload._cancel;
+
+            if ( current[edge] ) {
+                try {
+                    current[edge].abort();
+                }
+                catch(e) {}
+            }
+
+            current[edge] = _cancel;
+        }
+
         let data;
         let url = base_url + edge;
 
-        if ( method === 'GET' ) {
-            url += '?' + new URLSearchParams(payload).toString();
+        if ( method == 'GET' ) {
+            if ( get_params_format == 'php' ) {
+                url += '?' + buildParams(payload);
+            }
+            else {
+                url += '?' + new URLSearchParams(payload).toString();
+            }
         }
-        else if ( method === 'POST' ) {
-            if ( headers['Content-Type'] === 'multipart/form-data' ) {
+        else if ( method == 'POST' ) {
+            if ( headers['Content-Type'] == 'multipart/form-data' ) {
                 data = new FormData();
 
-                for (let key in payload) {
+                for ( let key in payload ) {
                     appendFormData(data, key, payload[key]);
                 }
 
                 delete headers['Content-Type'];
             }
-            else if ( headers['Content-Type'] === 'application/x-www-form-urlencoded' ) {
+            else if ( headers['Content-Type'] == 'application/x-www-form-urlencoded' ) {
                 data = serializeToURLEncoded(payload).replace(/\&+$/, '');
             }
             else {
@@ -150,16 +202,24 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             }
         }
 
-        fetch(url, {
-            method,
-            headers,
-            body: method === 'GET' ? undefined : data,
-        })
+        let options = { method, headers };
+
+        if ( method != 'GET' ) {
+            options.body = data;
+        }
+
+        if ( _cancel ) {
+            options.signal = _cancel.signal;
+        }
+
+        fetch(url, options)
         .then(async (response) => {
             if ( _button !== undefined ) {
                 _button.disabled = false;
                 _button.innerHTML = _button_html;
             }
+
+            delete current[edge];
 
             const response_data = await response.json();
 
@@ -179,6 +239,12 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             reject(errors);
         })
         .catch((error) => {
+            if ( error.name == 'AbortError' ) {
+                return;
+            }
+
+            delete current[edge];
+
             let errors = [error.message];
 
             if ( display_errors ) {
