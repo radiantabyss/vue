@@ -1,5 +1,5 @@
 import { nextTick, watch } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, createWebHashHistory, createMemoryHistory } from 'vue-router';
 import Str from './../Support/Str';
 import Actions from './Actions';
 import Middleware from './Middleware';
@@ -30,14 +30,25 @@ const loadModules = async () => {
     }
 }
 
-export default async () => {
+export default async (history_mode = 'web') => {
     let runMiddleware = await Middleware();
 
     await loadModules();
 
+    let history;
+    if ( history_mode == 'web' ) {
+        history = createWebHistory();
+    }
+    else if ( history_mode == 'hash' ) {
+        history = createWebHashHistory();
+    }
+    else if ( history_mode == 'memory' ) {
+        history = createMemoryHistory();
+    }
+
     //create router
     const Router = createRouter({
-        history: createWebHistory(),
+        history,
         routes: [],
         duplicateNavigationPolicy: 'reload',
         scrollBehavior(to, from, scroll) {
