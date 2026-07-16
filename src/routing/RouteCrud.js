@@ -1,4 +1,4 @@
-import Str from './../Support/Str';
+import Str from './../Support/Str.js';
 
 let self = {
     run(domain) {

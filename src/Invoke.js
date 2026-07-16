@@ -1,4 +1,4 @@
-import Str from './Support/Str';
+import Str from './Support/Str.js';
 
 let sprite_version = import.meta.env.VITE_SPRITE_VERSION;
 

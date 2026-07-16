@@ -1,11 +1,11 @@
 import { nextTick, watch } from 'vue';
 import { createRouter, createWebHistory, createWebHashHistory, createMemoryHistory } from 'vue-router';
-import Str from './../Support/Str';
-import Actions from './Actions';
-import Middleware from './Middleware';
-import RouteFiles from './RouteFiles';
-import Route from './Route';
-import RouteCrud from './RouteCrud';
+import Str from './../Support/Str.js';
+import Actions from './Actions.js';
+import Middleware from './Middleware.js';
+import RouteFiles from './RouteFiles.js';
+import Route from './Route.js';
+import RouteCrud from './RouteCrud.js';
 
 window.RouteFiles = RouteFiles;
 window.Route = Route;

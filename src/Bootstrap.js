@@ -1,22 +1,22 @@
-import Components from './Components';
-import Directives from './Directives';
-import Mixins from './Mixins';
-import Modals from './Modals';
+import Components from './Components.js';
+import Directives from './Directives.js';
+import Mixins from './Mixins.js';
+import Modals from './Modals.js';
 
-import Alert from './Alert';
-import Cookie from './Support/Cookie';
-import Confirm from './Confirm';
-import Gate from './Support/Gate';
-import Helpers from './Support/Helpers';
-import Invoke from './Invoke';
-import Item from './Support/Item';
-import Items from './Support/Items';
-import Modal from './Modal';
-import Request from './Request';
-import ReactiveStorage from './Support/ReactiveStorage';
-import Str from './Support/Str';
+import Alert from './Alert.js';
+import Cookie from './Support/Cookie.js';
+import Confirm from './Confirm.js';
+import Gate from './Support/Gate.js';
+import Helpers from './Support/Helpers.js';
+import Invoke from './Invoke.js';
+import Item from './Support/Item.js';
+import Items from './Support/Items.js';
+import Modal from './Modal.js';
+import Request from './Request.js';
+import ReactiveStorage from './Support/ReactiveStorage.js';
+import Str from './Support/Str.js';
 
-import Store from './Store';
+import Store from './Store.js';
 
 export default async (app) => {
     //helpers

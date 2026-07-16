@@ -1,4 +1,4 @@
-import Str from './Support/Str';
+import Str from './Support/Str.js';
 
 let context_ra = import.meta.glob('/node_modules/@radiantabyss/vue-components/src/Components/**/*.vue');
 let context = import.meta.glob('@/Components/**/*.vue');
