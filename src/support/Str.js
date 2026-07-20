@@ -183,6 +183,7 @@ let self = {
     },
 
     leading_zero(number) {
+        number = parseInt(number);
         return number < 10 ? `0${number}` : number;
     },
 
