@@ -88,6 +88,28 @@ const buildParams = (obj, prefix = '', params = new URLSearchParams()) => {
     return params;
 }
 
+//recursively remove keys whose value is undefined or null so they aren't sent to the server
+const stripEmpty = (value) => {
+    if ( Array.isArray(value) ) {
+        return value.map(stripEmpty);
+    }
+
+    if ( value !== null && typeof value === 'object' && !(value instanceof Blob) ) {
+        const cleaned = {};
+        for ( let key in value ) {
+            if ( value[key] === undefined || value[key] === null ) {
+                continue;
+            }
+
+            cleaned[key] = stripEmpty(value[key]);
+        }
+
+        return cleaned;
+    }
+
+    return value;
+};
+
 const request = function(method, edge, payload = {}, display_errors = false, base_url = null, auth_token = null, headers = {}, upload_progress = null) {
     return new Promise((resolve, reject) => {
         if ( !base_url ) {
@@ -147,6 +169,9 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
 
             current[edge] = _cancel;
         }
+
+        //drop undefined/null keys before serializing
+        payload = stripEmpty(payload);
 
         let data;
         let url = base_url + edge;
