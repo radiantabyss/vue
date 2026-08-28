@@ -273,7 +273,7 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             let errors = [error.message];
 
             if ( display_errors ) {
-                Alert.error(errors.join('<br/>'), 7000);
+                Alert.error(__('Internal Server Error. We\'re fixing the problem. Please retry in a couple of hours.'), 7000);
             }
 
             if ( _button !== undefined ) {
