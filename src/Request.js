@@ -1,6 +1,14 @@
 let sprite_version = import.meta.env.VITE_SPRITE_VERSION;
 let get_params_format = import.meta.env.VITE_GET_PARAMS_FORMAT || 'php';
+let post_format = import.meta.env.VITE_POST_FORMAT || 'default';
 let current = {};
+
+//content type used for POST when the caller doesn't set one, picked by VITE_POST_FORMAT
+const post_content_types = {
+    default: 'application/x-www-form-urlencoded',
+    form_data: 'multipart/form-data',
+    json: 'application/json',
+};
 
 const formatErrors = function(response) {
     let errors = [];
@@ -88,27 +96,36 @@ const buildParams = (obj, prefix = '', params = new URLSearchParams()) => {
     return params;
 }
 
-//recursively drop undefined values; null is dropped too, or sent as an empty string when null_as_empty
-//is set (form bodies can't carry null, and `key=` lets the backend read it as null to clear a field)
-const cleanPayload = (value, null_as_empty) => {
-    const isDropped = (v) => v === undefined || (v === null && !null_as_empty);
-
+//recursively drop undefined values. nulls and empty arrays follow the `empty` mode:
+//'drop' removes them, 'empty' sends them as an empty string (form bodies can't carry null or [],
+//and `key=` lets the backend read it as null to clear a field), 'keep' leaves them as-is (json)
+const cleanPayload = (value, empty) => {
     if ( value === null ) {
-        return null_as_empty ? '' : value;
+        if ( empty == 'keep' ) {
+            return null;
+        }
+
+        return empty == 'empty' ? '' : undefined;
     }
 
     if ( Array.isArray(value) ) {
-        return value.filter((v) => !isDropped(v)).map((v) => cleanPayload(v, null_as_empty));
+        const cleaned = value.map((v) => cleanPayload(v, empty)).filter((v) => v !== undefined);
+
+        if ( !cleaned.length && empty != 'keep' ) {
+            return empty == 'empty' ? '' : undefined;
+        }
+
+        return cleaned;
     }
 
     if ( typeof value === 'object' && !(value instanceof Blob) ) {
         const cleaned = {};
         for ( let key in value ) {
-            if ( isDropped(value[key]) ) {
-                continue;
-            }
+            const v = cleanPayload(value[key], empty);
 
-            cleaned[key] = cleanPayload(value[key], null_as_empty);
+            if ( v !== undefined ) {
+                cleaned[key] = v;
+            }
         }
 
         return cleaned;
@@ -131,10 +148,10 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             Alert.hide();
         }
 
-        if ( !Object.keys(headers).length ) {
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            };
+        headers = { ...headers };
+
+        if ( method == 'POST' && !headers['Content-Type'] ) {
+            headers['Content-Type'] = post_content_types[post_format] || post_content_types.default;
         }
 
         let _button;
@@ -177,8 +194,17 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             current[edge] = _cancel;
         }
 
-        //drop undefined keys; GET drops null too, POST sends it as an empty value
-        payload = cleanPayload(payload, method != 'GET');
+        //drop undefined keys; nulls and empty arrays are dropped on GET, sent as empty values
+        //in form bodies and kept as-is in json
+        let empty = 'keep';
+        if ( method == 'GET' ) {
+            empty = 'drop';
+        }
+        else if ( ['multipart/form-data', 'application/x-www-form-urlencoded'].includes(headers['Content-Type']) ) {
+            empty = 'empty';
+        }
+
+        payload = cleanPayload(payload, empty);
 
         let data;
         let url = base_url + edge;
@@ -206,7 +232,7 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             }
             else {
                 data = JSON.stringify(payload);
-                headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                headers['Content-Type'] = 'application/json';
             }
         }
 
