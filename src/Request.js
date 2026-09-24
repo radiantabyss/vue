@@ -88,20 +88,27 @@ const buildParams = (obj, prefix = '', params = new URLSearchParams()) => {
     return params;
 }
 
-//recursively remove keys whose value is undefined or null so they aren't sent to the server
-const stripEmpty = (value) => {
-    if ( Array.isArray(value) ) {
-        return value.map(stripEmpty);
+//recursively drop undefined values; null is dropped too, or sent as an empty string when null_as_empty
+//is set (form bodies can't carry null, and `key=` lets the backend read it as null to clear a field)
+const cleanPayload = (value, null_as_empty) => {
+    const isDropped = (v) => v === undefined || (v === null && !null_as_empty);
+
+    if ( value === null ) {
+        return null_as_empty ? '' : value;
     }
 
-    if ( value !== null && typeof value === 'object' && !(value instanceof Blob) ) {
+    if ( Array.isArray(value) ) {
+        return value.filter((v) => !isDropped(v)).map((v) => cleanPayload(v, null_as_empty));
+    }
+
+    if ( typeof value === 'object' && !(value instanceof Blob) ) {
         const cleaned = {};
         for ( let key in value ) {
-            if ( value[key] === undefined || value[key] === null ) {
+            if ( isDropped(value[key]) ) {
                 continue;
             }
 
-            cleaned[key] = stripEmpty(value[key]);
+            cleaned[key] = cleanPayload(value[key], null_as_empty);
         }
 
         return cleaned;
@@ -170,8 +177,8 @@ const request = function(method, edge, payload = {}, display_errors = false, bas
             current[edge] = _cancel;
         }
 
-        //drop undefined/null keys before serializing
-        payload = stripEmpty(payload);
+        //drop undefined keys; GET drops null too, POST sends it as an empty value
+        payload = cleanPayload(payload, method != 'GET');
 
         let data;
         let url = base_url + edge;
