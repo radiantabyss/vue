@@ -1,6 +1,6 @@
 import Str from './Support/Str.js';
 
-let context = import.meta.glob('/app/Modals/**/*.vue');
+let context = import.meta.glob('/app/Modals/**/*.vue', { eager: true });
 
 export default async (app) => {
     const files = Object.keys(context);
@@ -13,7 +13,7 @@ export default async (app) => {
 
         name = Str.trim(name, '-');
 
-        let module = await context[files[i]]();
+        let module = context[files[i]];
         app.component(name, module.default);
     }
 }

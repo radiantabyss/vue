@@ -1,5 +1,5 @@
 let Actions = {};
-let context = import.meta.glob('/app/Domains/**/*.vue');
+let context = import.meta.glob('/app/Domains/**/*.vue', { eager: true });
 
 const loadModules = async () => {
     const files = Object.keys(context);
@@ -17,7 +17,7 @@ const loadModules = async () => {
             continue;
         }
 
-        let module = await context[files[i]]();
+        let module = context[files[i]];
         setNamespace(Actions, name, split, module);
     }
 }

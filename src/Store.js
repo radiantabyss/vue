@@ -1,7 +1,7 @@
 import { createStore } from 'vuex';
 
 const Modules = {};
-let context = import.meta.glob('/app/Store/**/*.js');
+let context = import.meta.glob('/app/Store/**/*.js', { eager: true });
 
 const loadModules = async () => {
     const files = Object.keys(context);
@@ -15,7 +15,7 @@ const loadModules = async () => {
         let name = split[split.length - 1].replace('.js', '');
         split.pop();
 
-        let module = await context[files[i]]();
+        let module = context[files[i]];
         setNamespace(Modules, name, split, module);
     }
 }

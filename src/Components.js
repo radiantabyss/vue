@@ -1,7 +1,7 @@
 import Str from './Support/Str.js';
 
-let context_ra = import.meta.glob('/node_modules/@radiantabyss/vue-components/src/Components/**/*.vue');
-let context = import.meta.glob('@/Components/**/*.vue');
+let context_ra = import.meta.glob('/node_modules/@radiantabyss/vue-components/src/Components/**/*.vue', { eager: true });
+let context = import.meta.glob('@/Components/**/*.vue', { eager: true });
 
 function getComponentName(file) {
     let split = file.split('/');
@@ -22,7 +22,7 @@ export default async (app) => {
         let component = getComponentName(files[i]);
         components.push(component);
 
-        let module = await context[files[i]]();
+        let module = context[files[i]];
         app.component(component, module.default);
     }
 
@@ -37,7 +37,7 @@ export default async (app) => {
             continue;
         }
 
-        let module = await context_ra[files[i]]();
+        let module = context_ra[files[i]];
         components.push(component);
         app.component(component, module.default);
     }

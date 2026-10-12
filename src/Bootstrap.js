@@ -1,6 +1,7 @@
+//must be imported first: eagerly loaded components reference Mixins.X at definition time
+import Mixins from './Mixins.js';
 import Components from './Components.js';
 import Directives from './Directives.js';
-import Mixins from './Mixins.js';
 import Modals from './Modals.js';
 
 import Alert from './Alert.js';

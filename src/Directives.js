@@ -1,6 +1,6 @@
 import Str from './Support/Str.js';
 
-let context = import.meta.glob('/app/Directives/**/*.js');
+let context = import.meta.glob('/app/Directives/**/*.js', { eager: true });
 
 export default async (app) => {
     const files = Object.keys(context);
@@ -14,7 +14,7 @@ export default async (app) => {
 
         name = Str.trim(name, '-');
 
-        let module = await context[files[i]]();
+        let module = context[files[i]];
         app.directive(name, module.default);
     }
 }

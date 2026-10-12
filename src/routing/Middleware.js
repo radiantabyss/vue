@@ -1,5 +1,5 @@
 let Middleware = {};
-let context = import.meta.glob('/app/Http/Middleware/**/*.js');
+let context = import.meta.glob('/app/Http/Middleware/**/*.js', { eager: true });
 
 const loadModules = async () => {
     const files = Object.keys(context);
@@ -7,7 +7,7 @@ const loadModules = async () => {
     for ( let i = 0; i < files.length; i++ ) {
         let split = files[i].split('/');
         let name = split[split.length - 1].replace('.js', '').replace('Middleware', '');
-        let module = await context[files[i]]();
+        let module = context[files[i]];
         Middleware[name] = module.default;
     }
 }
