@@ -10,12 +10,13 @@ import Confirm from './Confirm.js';
 import Gate from './Support/Gate.js';
 import Helpers from './Support/Helpers.js';
 import Invoke from './Invoke.js';
-import Item from './Support/Item.js';
-import Items from './Support/Items.js';
 import Modal from './Modal.js';
 import Request from './Request.js';
 import ReactiveStorage from './Support/ReactiveStorage.js';
-import Str from './Support/Str.js';
+
+import Item from '@radiantabyss/support/src/Item.js';
+import Items from '@radiantabyss/support/src/Items.js';
+import Str from '@radiantabyss/support/src/Str.js';
 
 import Store from './Store.js';
 
@@ -36,12 +37,17 @@ export default async (app) => {
     window.Confirm = Confirm;
     window.Gate = Gate;
     window.Invoke = Invoke;
-    window.Item = Item;
-    window.Items = Items;
     window.Modal = Modal;
     window.Request = Request;
     window.ReactiveStorage = ReactiveStorage;
     window.Str = Str;
+
+    window.Item = Item;
+    window.Items = Items;
+    window.pluck = Items.pluck;
+    window.spread = Items.spread;
+    window.keyBy = Items.keyBy;
+    window.groupBy = Items.groupBy;
 
     //make usable inside template
     app.config.globalProperties.Item = Item;

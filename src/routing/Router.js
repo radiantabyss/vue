@@ -1,6 +1,6 @@
 import { nextTick, watch } from 'vue';
 import { createRouter, createWebHistory, createWebHashHistory, createMemoryHistory } from 'vue-router';
-import Str from './../Support/Str.js';
+import Str from '@radiantabyss/support/src/Str.js';
 import Actions from './Actions.js';
 import Middleware from './Middleware.js';
 import RouteFiles from './RouteFiles.js';

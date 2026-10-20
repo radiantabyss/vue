@@ -1,4 +1,4 @@
-import Str from './Support/Str.js';
+import Str from '@radiantabyss/support/src/Str.js';
 
 let context = import.meta.glob('/app/Directives/**/*.js', { eager: true });
 
